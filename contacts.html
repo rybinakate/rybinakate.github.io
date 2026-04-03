@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты | Ваше Имя</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Обо мне</a></li>
+                <li><a href="projects/project1.html">Анализ плотности населения для бизнеса</a>
+                </li>
+                <li><a href="projects/project2.html">Каттарская низменность</a></li>
+                <li><a href="projects/project3.html">Проект 3</a></li>
+                <li><a href="projects/project4.html">Проект 4</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="contact-form">
+            <h3>Напишите мне</h3>
+
+            <form action="https://formspree.io/f/mpqojjlv" method="POST">
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email для ответа:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+
+                <button type="submit">Отправить</button>
+
+                <p class="form-note">Ваши данные не будут переданы третьим лицам</p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 | Сделано с ❤️ для портфолио</p>
+    </footer>
+</body>
+
+</html>
