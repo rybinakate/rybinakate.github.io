@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализ плотности населения | Ваше Имя</title>
+    <title>Анализ коммерческого потенциала локаций для F&B проектов| Ваше Имя</title>
+   <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" />
-    <link rel="stylesheet" href="../css/style.css">
+  
     <style>
         /* Специфичные стили для страницы карты */
 
@@ -58,39 +59,22 @@
             font-size: 0.9rem;
             color: #666;
         }
+
+
     </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Обо мне</a></li>
-                <li><a href="project1.html" class="active">Анализ плотности населения</a></li>
-                <li><a href="project2.html">Каттарская низменность</a></li>
-                <li><a href="project3.html">Проект 3</a></li>
-                <li><a href="project4.html">Проект 4</a></li>
-                <li><a href="../contacts.html">Контакты</a></li>
-            </ul>
-        </nav>
-    </header>
+<header></header>
 
     <main>
-        <h1>Анализ плотности населения</h1>
-        <p>Интерактивная карта показывает распределение населения в выбранном районе.
-            Нажмите на любой хексагон, чтобы увидеть точное количество жителей.</p>
+        <h1>Анализ коммерческого потенциала локаций для F&B проектов</h1>
+       <p class="description-text">Интерактивная карта показывает распределение населения в выбранном районе. 
+   Нажмите на любой хексагон, чтобы увидеть точное количество жителей.</p>
 
         <div class="info-panel">
             <div class="stats" id="stats-panel">
-                <!-- <div class="stat-card">
-                    <div class="stat-value" id="total-population">0</div>
-                    <div class="stat-label">Всего жителей</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="avg-density">0</div>
-                    <div class="stat-label">Средняя плотность (чел/га)</div>
-                </div> -->
-               
+              
                 <div class="stat-card">
                     <div class="stat-value" id="selected-population">—</div>
                     <div class="stat-label">Выбрано жителей</div>
@@ -112,11 +96,73 @@
             <div id="map"></div>
         </div>
 
+<!-- Легенда -->
+<div class="legend">
+    <div class="legend-title">📊 Условные обозначения</div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Население (чел/гексагон)</div>
+        <div class="legend-gradient">
+            <div class="gradient-bar"></div>
+            <div class="gradient-labels">
+                <span>0</span>
+                <span>5k</span>
+                <span>15k</span>
+                <span>30k</span>
+                <!-- <span>50k+</span> -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Типы точек питания</div>
+        <div class="legend-items">
+            <div class="legend-item">
+                <span class="legend-color" style="background: #FF6B35;"></span>
+                <span>Кафе</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #F7C35C;"></span>
+                <span>Пекарни</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #9B5DE5;"></span>
+                <span>Бары / Пабы</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #F15BB5;"></span>
+                <span>Рестораны</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #00BBF9;"></span>
+                <span>Фастфуд</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #00F5D4;"></span>
+                <span>Фуд-корты</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Аналитика</div>
+        <div class="legend-item">
+            <span class="legend-line" style="background: #ff0000;"></span>
+            <span>Изохрона (5 мин пешком)</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-point"></span>
+            <span>Клик — подсчёт конкурентов</span>
+        </div>
+    </div>
+</div>
+
+
 
 
         <div class="project-description">
             <h3>О проекте</h3>
-            <p>Для этого проекта использовались данные Kontur Population (H3-хексагоны с населением).
+            <p class="description-text">Для этого проекта использовались данные Kontur Population (H3-хексагоны с населением).
                 Каждый хексагон окрашен в зависимости от плотности населения:
                 светлый — низкая плотность, темный — высокая.</p>
             <p><strong>Технологии:</strong> Maplibre GL JS, GeoJSON, HTML/CSS, JavaScript</p>
@@ -132,6 +178,7 @@
     <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
     <script src="../js/map.js"></script>
+    <script src="../js/include.js"></script>
 </body>
 
 </html>

@@ -3,6 +3,20 @@ let map;
 let populationData;
 let currentIsochroneLayer = null;
 let isHexLayerVisible = true;
+let poiData = null;
+
+// ========== ЦВЕТА ДЛЯ РАЗНЫХ ТИПОВ POI ==========
+const poiColors = {
+    'cafe': '#FF6B35',        // оранжевый
+    'bakery': '#F7C35C',      // золотистый
+    'bar': '#9B5DE5',         // фиолетовый
+    'pub': '#9B5DE5',         // фиолетовый
+    'restaurant': '#F15BB5',  // розовый
+    'fast_food': '#00BBF9',   // голубой
+    'food_court': '#00F5D4',  // бирюзовый
+    'convenience': '#00BBF9', // голубой (магазины)
+    'default': '#0a2a4a'      // синий по умолчанию
+};
 
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,11 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/positron',
         center: [37.6173, 55.7558],
-        zoom: 11
+        zoom: 9
     });
 
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
+    // Загружаем POI
+    fetch('../data/poi.geojson')
+        .then(response => response.json())
+        .then(data => {
+            poiData = data;
+            console.log('✅ POI загружены! Найдено объектов:', data.features.length);
+        })
+        .catch(error => {
+            console.error('❌ Ошибка загрузки POI:', error);
+        });
+
+    // Загружаем данные о населении
     fetch('../data/population.geojson')
         .then(response => response.json())
         .then(data => {
@@ -27,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return sum + (feature.properties.population || 0);
             }, 0);
 
-            // Безопасное обновление элементов
             const totalEl = document.getElementById('total-population');
             if (totalEl) totalEl.textContent = totalPopulation.toLocaleString();
             
@@ -36,65 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (avgEl) avgEl.textContent = avgDensity;
 
             map.on('load', () => {
-                map.addSource('population', {
-                    type: 'geojson',
-                    data: populationData
-                });
-
-                map.addLayer({
-                    id: 'population-hex',
-                    type: 'fill',
-                    source: 'population',
-                    paint: {
-                        'fill-color': [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'population'],
-                            0, '#fee5d9',
-                            5000, '#fcae91',
-                            15000, '#fb6a4a',
-                            30000, '#de2d26',
-                            50000, '#a50f15'
-                        ],
-                        'fill-opacity': 0.7,
-                        'fill-outline-color': '#ffffff'
-                    }
-                });
-
-                const popup = new maplibregl.Popup({
-                    closeButton: false,
-                    closeOnClick: false
-                });
-
-                map.on('mousemove', 'population-hex', (e) => {
-                    if (e.features.length > 0 && isHexLayerVisible) {
-                        const feature = e.features[0];
-                        const population = feature.properties.population || 0;
-                        const name = feature.properties.name || 'Район';
-                        
-                        map.getCanvas().style.cursor = 'pointer';
-                        popup.setLngLat(e.lngLat)
-                            .setHTML(`<strong>${name}</strong><br/>Население: ${population.toLocaleString()} чел.`)
-                            .addTo(map);
-                    }
-                });
-
-                map.on('mouseleave', 'population-hex', () => {
-                    map.getCanvas().style.cursor = '';
-                    popup.remove();
-                });
-
-                map.on('click', 'population-hex', (e) => {
-                    if (e.features.length > 0 && isHexLayerVisible) {
-                        const population = e.features[0].properties.population || 0;
-                        const selectedEl = document.getElementById('selected-population');
-                        if (selectedEl) {
-                            selectedEl.textContent = population.toLocaleString();
-                        }
-                    }
-                });
-
+                addPopulationLayer();
+                addHexagonInteraction();
                 createIsochroneResultBlock();
+                addPOILayer();  // Добавляем POI после загрузки карты
             });
         })
         .catch(error => {
@@ -105,52 +75,169 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     
+    // ЕДИНСТВЕННЫЙ обработчик клика
     map.on('click', (e) => {
         if (populationData) {
-            calculateIsochrone(e.lngLat, 15);
+            calculateIsochrone(e.lngLat, 5);
+        }
+        
+        if (poiData) {
+            const count = countCompetitors(e.lngLat, 400);
+            new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(`🏪 Конкурентов в 400м: ${count}`)
+                .addTo(map);
+        } else {
+            new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(`⏳ Загрузка данных...`)
+                .addTo(map);
         }
     });
 });
 
-function createIsochroneResultBlock() {
-    const statsPanel = document.getElementById('stats-panel');
-    if (statsPanel && !document.getElementById('isochrone-result')) {
-        const resultBlock = document.createElement('div');
-        resultBlock.id = 'isochrone-result';
-        resultBlock.className = 'stat-card';
-        resultBlock.style.background = '#f0f0f0';
-        resultBlock.style.transition = 'all 0.3s ease';
-        resultBlock.innerHTML = `
-            <div class="stat-value">—</div>
-            <div class="stat-label">👣 Жителей в 15 мин ходьбы</div>
-            <small>кликните на карту</small>
-        `;
-        statsPanel.appendChild(resultBlock);
-    }
-}
-
-function toggleHexLayer() {
-    const toggleBtn = document.getElementById('toggle-hex-layer');
-    if (map && map.getLayer('population-hex')) {
-        if (isHexLayerVisible) {
-            map.setLayoutProperty('population-hex', 'visibility', 'none');
-            isHexLayerVisible = false;
-            if (toggleBtn) toggleBtn.textContent = 'Показать районы';
-            if (toggleBtn) toggleBtn.classList.add('active');
-        } else {
-            map.setLayoutProperty('population-hex', 'visibility', 'visible');
-            isHexLayerVisible = true;
-            if (toggleBtn) toggleBtn.textContent = 'Скрыть районы';
-            if (toggleBtn) toggleBtn.classList.remove('active');
+// ========== ДОБАВЛЕНИЕ СЛОЯ НАСЕЛЕНИЯ ==========
+function addPopulationLayer() {
+    map.addSource('population', {
+        type: 'geojson',
+        data: populationData
+    });
+    
+    map.addLayer({
+        id: 'population-hex',
+        type: 'fill',
+        source: 'population',
+        paint: {
+            'fill-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'population'],
+                0, '#fee5d9',
+                5000, '#fcae91',
+                15000, '#fb6a4a',
+                30000, '#de2d26',
+                50000, '#a50f15'
+            ],
+            'fill-opacity': 0.7,
+            'fill-outline-color': '#ffffff'
         }
+    });
+}
+
+// ========== ДОБАВЛЕНИЕ СЛОЯ POI С РАСКРАСКОЙ ПО ТИПАМ ==========
+function addPOILayer() {
+    if (!poiData) return;
+    
+    // Проверяем, что карта загружена и источник ещё не добавлен
+    if (!map.getSource('poi')) {
+        map.addSource('poi', {
+            type: 'geojson',
+            data: poiData
+        });
+        
+        map.addLayer({
+            id: 'poi',
+            type: 'circle',
+            source: 'poi',
+             minzoom: 13,
+            paint: {
+                'circle-color': [
+                    'match',
+                    ['get', 'fclass'],
+                    'cafe', poiColors['cafe'],
+                    'bakery', poiColors['bakery'],
+                    'bar', poiColors['bar'],
+                    'pub', poiColors['pub'],
+                    'restaurant', poiColors['restaurant'],
+                    'fast_food', poiColors['fast_food'],
+                    'food_court', poiColors['food_court'],
+                    'convenience', poiColors['convenience'],
+                    poiColors['default']
+                ],
+                'circle-radius': 3,
+                'circle-stroke-width': 1,
+                'circle-stroke-color': '#ffffff'
+            }
+           
+        });
+        
+        console.log('✅ Слой POI добавлен на карту');
     }
 }
 
-function calculateIsochrone(center, minutes, speed = 80) {
-    if (!populationData) {
-        console.warn('Данные о населении ещё не загружены');
-        return;
+// ========== ВЗАИМОДЕЙСТВИЕ С ГЕКСАГОНАМИ ==========
+function addHexagonInteraction() {
+    const popup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+    map.on('mousemove', 'population-hex', (e) => {
+        if (e.features.length > 0 && isHexLayerVisible) {
+            const feature = e.features[0];
+            const population = feature.properties.population || 0;
+            const name = feature.properties.name || 'Район';
+            
+            map.getCanvas().style.cursor = 'pointer';
+            popup.setLngLat(e.lngLat)
+                .setHTML(`<strong>${name}</strong><br/>Население: ${population.toLocaleString()} чел.`)
+                .addTo(map);
+        }
+    });
+
+    map.on('mouseleave', 'population-hex', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
+
+    map.on('click', 'population-hex', (e) => {
+        if (e.features.length > 0 && isHexLayerVisible) {
+            const population = e.features[0].properties.population || 0;
+            const selectedEl = document.getElementById('selected-population');
+            if (selectedEl) {
+                selectedEl.textContent = population.toLocaleString();
+            }
+        }
+    });
+}
+
+// ========== ПОДСЧЁТ КОНКУРЕНТОВ ==========
+function countCompetitors(lngLat, radius = 400) {
+    if (!poiData) {
+        console.warn('⚠️ POI ещё не загружены');
+        return 0;
     }
+    
+    const center = turf.point([lngLat.lng, lngLat.lat]);
+    const buffer = turf.buffer(center, radius / 1000, { units: 'kilometers' });
+    
+    let count = 0;
+    
+    poiData.features.forEach(feature => {
+        if (!feature.geometry) return;
+        if (feature.geometry.type !== 'Point') return;
+        
+        const pointCoords = feature.geometry.coordinates;
+        
+        if (!Array.isArray(pointCoords) || pointCoords.length < 2) return;
+        if (typeof pointCoords[0] !== 'number' || typeof pointCoords[1] !== 'number') return;
+        
+        try {
+            const point = turf.point(pointCoords);
+            if (turf.booleanPointInPolygon(point, buffer)) {
+                count++;
+            }
+        } catch (e) {
+            // Пропускаем проблемные точки
+        }
+    });
+    
+    return count;
+}
+
+// ========== ИЗОХРОНЫ ==========
+function calculateIsochrone(center, minutes, speed = 80) {
+    if (!populationData) return;
     
     const radius = minutes * speed;
     const point = turf.point([center.lng, center.lat]);
@@ -224,21 +311,23 @@ function displayIsochrone(isochrone, center, minutes, population, intersectingCo
             <small>охвачено ${intersectingCount} кварталов</small>
         `;
     }
-    
-    new maplibregl.Popup()
-        .setLngLat(center)
-        .setHTML(`
-            <div style="text-align: center;">
-                <strong>🚶‍♀️ ${minutes} минут пешком</strong><br>
-                👥 ${population.toLocaleString()} человек
-            </div>
-        `)
-        .addTo(map);
-    
-    setTimeout(() => {
-        const popup = document.querySelector('.maplibregl-popup');
-        if (popup) popup.remove();
-    }, 5000);
+}
+
+function createIsochroneResultBlock() {
+    const statsPanel = document.getElementById('stats-panel');
+    if (statsPanel && !document.getElementById('isochrone-result')) {
+        const resultBlock = document.createElement('div');
+        resultBlock.id = 'isochrone-result';
+        resultBlock.className = 'stat-card';
+        resultBlock.style.background = '#f0f0f0';
+        resultBlock.style.transition = 'all 0.3s ease';
+        resultBlock.innerHTML = `
+            <div class="stat-value">—</div>
+            <div class="stat-label">👣 Жителей в 5 мин ходьбы</div>
+            <small>кликните на карту</small>
+        `;
+        statsPanel.appendChild(resultBlock);
+    }
 }
 
 function resetIsochrone() {
@@ -257,13 +346,31 @@ function resetIsochrone() {
             resultBlock.style.background = '#f0f0f0';
             resultBlock.innerHTML = `
                 <div class="stat-value">—</div>
-                <div class="stat-label">👣 Жителей в 15 мин ходьбы</div>
+                <div class="stat-label">👣 Жителей в 5 мин ходьбы</div>
                 <small>кликните на карту</small>
             `;
         }
     }
 }
 
+function toggleHexLayer() {
+    const toggleBtn = document.getElementById('toggle-hex-layer');
+    if (map && map.getLayer('population-hex')) {
+        if (isHexLayerVisible) {
+            map.setLayoutProperty('population-hex', 'visibility', 'none');
+            isHexLayerVisible = false;
+            if (toggleBtn) toggleBtn.textContent = 'Показать районы';
+            if (toggleBtn) toggleBtn.classList.add('active');
+        } else {
+            map.setLayoutProperty('population-hex', 'visibility', 'visible');
+            isHexLayerVisible = true;
+            if (toggleBtn) toggleBtn.textContent = 'Скрыть районы';
+            if (toggleBtn) toggleBtn.classList.remove('active');
+        }
+    }
+}
+
+// ========== НАСТРОЙКА КНОПОК ==========
 document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-analytics');
     if (resetBtn) {
