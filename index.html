@@ -1,56 +1,218 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Екатерина Рыбина | Портфолио</title>
+    <title>Екатерина Рыбина | Веб-картограф и GIS-аналитик</title>
     <link rel="stylesheet" href="css/style.css">
+    
 </head>
-
 <body>
-<header></header>
+    <header></header>
 
     <main>
-        <section class="about">
-            <h1>Привет, я Екатерина Рыбина</h1>
+        <!-- Профиль -->
+       <!-- Профиль -->
+<div class="profile-header">
+    <div class="profile-photo">
+        <img src="assets/images/my-photo.jpg" alt="Екатерина Рыбина" onerror="this.src='https://placehold.co/300x300?text=Photo'">
+    </div>
+    <div class="profile-text">
+        <h1 class="profile-name">Екатерина Рыбина</h1>
+        <!--<div class="profile-title">Веб-картограф и аналитик пространственных данных </div>-->
+        <div class="experience-badge"> ГИС-аналитик пространственных данных / GIS Specialist (20+ лет)</div>
+        <p class="profile-bio">
+            Превращаю сложные геоданные в понятные интерактивные карты и инсайты для науки и бизнеса.<br>
+            Мой подход — сочетание аналитического мышления с современными веб-технологиями.
+        </p>
+        <p class="profile-bio">
+            <strong>Стек:</strong> QGIS · ArcGIS Pro · PostGIS · Web GIS · Базовое программирование
+        </p>
+    </div>
+</div>
 
-            <div class="about-content">
-                <div class="about-text">
+        <!-- Ключевые навыки -->
+        <div class="section">
+            <h2 class="section-title">📍 Ключевые навыки</h2>
+            <table class="skills-table">
+                <thead>
+                    <tr>
+                        <th>Направление</th>
+                        <th>Стек</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Настольные ГИС</td>
+                        <td>ArcGIS Pro, ArcGIS Desktop, Global Mapper, QGIS, JOSM</td>
+                    </tr>
+                    <tr>
+                        <td>Облачные ГИС и Web-картография</td>
+                        <td>ArcGIS Online, ArcGIS StoryMaps, ArcGIS Dashboards, GeoServer, MapLibre GL JS, Leaflet, Google Earth Engine</td>
+                    </tr>
+                    <tr>
+                        <td>Базы данных</td>
+                        <td>PostgreSQL / PostGIS, SQL</td>
+                    </tr>
+                    <tr>
+                        <td>Программирование и автоматизация</td>
+                        <td>Python, JavaScript, Bash, Git, Vibe Coding</td>
+                    </tr>
+                    <tr>
+                        <td>Дизайн</td>
+                        <td>Figma, Adobe Photoshop, Adobe Lightroom</td>
+                    </tr>
+                    <tr>
+                        <td>Дополнительно</td>
+                        <td>AI-инструменты, AutoCAD, Excel, Word</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    <p>Веб-картограф и аналитик пространственных данных. Превращаю сложные геоданные в понятные
-                        интерактивные карты и инсайты для бизнеса.</p>
-                    <p>Мой подход — сочетание аналитического мышления с современными веб-технологиями.</p>
+        <!-- Языки -->
+        <div class="section">
+            <h2 class="section-title">🗣️ Языки</h2>
+            <div class="languages">
+                <span class="language-item">🇬🇧 Английский — B2</span>
+                <span class="language-item">🇮🇹 Итальянский — A1</span>
+                <span class="language-item">🇷🇺 Русский — Родной</span>
+            </div>
+        </div>
 
-                    <h3>Навыки</h3>
-                    <ul class="skills-list">
-                        <li>🗺️ Maplibre GL JS</li>
-                        <li>🐍 Python / GeoPandas</li>
-                        <li>🗄️ PostGIS</li>
-                        <li>📊 QGIS</li>
-                        <li>🌍 OSM API</li>
-                        <li>📈 ArcGis/ArcGis Pro</li>
+        <!-- Профиль (опыт) -->
+        <div class="section">
+            <h2 class="section-title">📌 Профиль</h2>
+            <p>Основная специализация — пространственный анализ, создание и управление базами геоданных, подготовка карт и публикация геоданных в веб-среде.</p>
+            <p>Продвинутый уровень QGIS и ArcGIS Pro, ArcGIS Online, PostgreSQL, PostGIS. Автоматизация рутинных задач (Python, Model Builder). Владею Git для контроля версий. Более 20 лет в геоинформатике.</p>
+        </div>
+
+        <!-- Задачи / Компетенции -->
+        <div class="section">
+            <h2 class="section-title">⚙️ Ключевые компетенции</h2>
+            <div class="two-columns">
+                <div>
+                    <h3>📐 Пространственный анализ и моделирование</h3>
+                    <ul>
+                        <li>Построение ЦМР, расчет уклонов/экспозиций, гидрологическое моделирование водосборов</li>
+                        <li>Многокритериальный анализ, булевы операции, растровая алгебра</li>
                     </ul>
-
-
+                    <h3>🗄️ Работа с данными и базами</h3>
+                    <ul>
+                        <li>Проектирование структуры базы геоданных в PostGIS</li>
+                        <li>Написание SQL-запросов для выборки, обновления и анализа пространственных объектов</li>
+                        <li>Векторизация, геопривязка растров, создание и валидация геометрии</li>
+                    </ul>
                 </div>
-
-                <div class="about-photo">
-                    <img src="images/my-photo.jpg" alt="Екатерина Рыбина"
-                        onerror="this.src='https://placehold.co/400x400?text=Kate+Rybina'">
+                <div>
+                    <h3>🗺️ Картография и визуализация</h3>
+                    <ul>
+                        <li>Создание тематических карт и атласов для печати и презентаций</li>
+                        <li>Подготовка интерактивных дашбордов (ArcGIS Dashboards) и историй (ArcGIS StoryMaps)</li>
+                        <li>Дизайн макетов в Figma</li>
+                    </ul>
+                    <h3>🌐 Web GIS</h3>
+                    <ul>
+                        <li>Публикация слоёв, настройка стилей через GeoServer (WMS/WFS)</li>
+                        <li>Подключение и стилизация данных в веб-картах на MapLibre GL JS, работа с API, работа с растровыми и векторными тайлами</li>
+                    </ul>
+                    <h3>🛰️ Работа с ДЗЗ</h3>
+                    <ul>
+                        <li>Визуальное дешифрирование космоснимков, мониторинг изменений</li>
+                        <li>Расчет спектральных индексов (вручную или с использованием Google Earth Engine)</li>
+                    </ul>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Образование -->
+        <div class="section">
+            <h2 class="section-title">🎓 Образование</h2>
+            <div class="education-item">
+                <div class="education-title">Кандидат технических наук</div>
+                <div class="education-place">Институт прикладной геофизики им. акад. Е.К. Федорова</div>
+            </div>
+            <div class="education-item">
+                <div class="education-title">Магистр экологии и природопользования</div>
+                <div class="education-place">РУДН</div>
+            </div>
+            <div class="education-item">
+                <div class="education-title">Бакалавр экологии и природопользования</div>
+                <div class="education-place">РУДН</div>
+            </div>
+        </div>
+
+        <!-- Дополнительное образование -->
+        <div class="section">
+            <h2 class="section-title">📚 Дополнительное образование</h2>
+            <div class="two-columns">
+                <div>
+                    <div class="course-item">
+                        <div class="course-title">Веб-картография: основы создания интерактивных онлайн-карт</div>
+                        <div class="course-place">Картетика</div>
+                        <div class="course-year">2026</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">PostgreSQL и QGIS</div>
+                        <div class="course-place">Картетика</div>
+                        <div class="course-year">2026</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">Visual Elements of User Interface Design</div>
+                        <div class="course-place">California Institute of Art</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">Going Places with Spatial Analysis</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">GIS for Climate Action</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="course-item">
+                        <div class="course-title">Cartography</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">Make an Impact with Modern Geo Apps</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">The ArcGIS Imagery MOOC: Foundations and Frontiers</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">Spatial Data Science: The New Frontier in Analytics</div>
+                        <div class="course-place">ESRI</div>
+                        <div class="course-year">2025</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">UX/UI Дизайнер приложений</div>
+                        <div class="course-place">Study Kvo</div>
+                        <div class="course-year">2024</div>
+                    </div>
+                    <div class="course-item">
+                        <div class="course-title">Основы графического дизайна</div>
+                        <div class="course-place">Технологический университет им. А.А. Леонова</div>
+                        <div class="course-year">2022</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
-        <p>© 2026 | Сделано с ❤️ к ГИС</p>
+        <p>© 2025 Екатерина Рыбина | Сделано с ❤️ для портфолио</p>
     </footer>
 
-        <script src="js/include.js"></script>
-     <!-- <script src="../js/include.js"></script> -->
-    <script src="js/main.js"></script>
-   
+    <script src="js/include.js"></script>
 </body>
-
 </html>

@@ -450,3 +450,188 @@ main h1 {
         display: inline-block;
     }
 
+/* ===== СТРАНИЦА "ОБО МНЕ" ===== */
+
+/* Профиль с фото */
+.profile-header {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.profile-photo {
+    flex: 0 0 200px;
+}
+
+.profile-photo img {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 3px solid #3498db;
+}
+
+.profile-text {
+    flex: 2;
+    min-width: 250px;
+}
+
+.profile-name {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.profile-title {
+    font-size: 1.2rem;
+    color: #3498db;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.profile-bio {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.experience-badge {
+    background: #e8f4f8;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+/* Таблица навыков */
+.skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.skills-table th {
+    background: #2c3e50;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.skills-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.skills-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+/* Секции */
+.section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Двухколоночный макет */
+.two-columns {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.two-columns > div {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Образование и курсы */
+.education-item, .course-item {
+    margin-bottom: 0.8rem;
+}
+
+.education-title, .course-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.education-place, .course-place {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.education-year, .course-year {
+    color: #3498db;
+    font-size: 0.85rem;
+}
+
+/* Языки */
+.languages {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.language-item {
+    background: #e8f4f8;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Списки в компетенциях */
+.section ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.section li {
+    margin-bottom: 0.3rem;
+    line-height: 1.5;
+}
+
+.section h3 {
+    color: #2c3e50;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .profile-name {
+        font-size: 1.6rem;
+    }
+    
+    .profile-photo {
+        flex: 0 0 150px;
+        margin: 0 auto;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .skills-table th, 
+    .skills-table td {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+}
