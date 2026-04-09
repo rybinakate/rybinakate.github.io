@@ -4,6 +4,8 @@ let populationData;
 let currentIsochroneLayer = null;
 let isHexLayerVisible = true;
 let poiData = null;
+let popperpoi_data;
+
 
 // ========== ЦВЕТА ДЛЯ РАЗНЫХ ТИПОВ POI ==========
 const poiColors = {
@@ -27,20 +29,41 @@ document.addEventListener('DOMContentLoaded', () => {
         style: 'https://tiles.openfreemap.org/styles/positron',
         center: [37.6173, 55.7558],
         zoom: 9
+        //maxBounds: [[35, 50], [40, 60]],
+        //hash: true,
     });
 
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
+    // Загружаем PopPerPoi
+fetch('../data/popperpoi.geojson')
+    .then(response => response.json())
+    .then(data => {
+        popperpoi_data = data;
+        console.log('✅ popperpoi загружены! Найдено объектов:', data.features.length);
+        // Добавляем слой после загрузки
+        if (map.isStyleLoaded()) {
+            addPopperpoiLayer();
+        } else {
+            map.on('load', addPopperpoiLayer);
+        }
+    })
+    .catch(error => {
+        console.error('❌ Ошибка загрузки popperpoi:', error);
+    });
+
+
+
     // Загружаем POI
-    fetch('../data/poi.geojson')
-        .then(response => response.json())
-        .then(data => {
-            poiData = data;
-            console.log('✅ POI загружены! Найдено объектов:', data.features.length);
-        })
-        .catch(error => {
-            console.error('❌ Ошибка загрузки POI:', error);
-        });
+fetch('../data/poi.geojson')
+    .then(response => response.json())
+    .then(data => {
+        poiData = data;  // ← ИСПРАВЛЕНО: poiData вместо poi
+        console.log('✅ POI загружены! Найдено объектов:', data.features.length);
+    })
+    .catch(error => {
+        console.error('❌ Ошибка загрузки POI:', error);
+    });
 
     // Загружаем данные о населении
     fetch('../data/population.geojson')
@@ -61,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (avgEl) avgEl.textContent = avgDensity;
 
             map.on('load', () => {
-                addPopulationLayer();
+               // addPopulationLayer();
+                 addPopperpoiLayer();
                 addHexagonInteraction();
                 createIsochroneResultBlock();
                 addPOILayer();  // Добавляем POI после загрузки карты
@@ -97,31 +121,73 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ========== ДОБАВЛЕНИЕ СЛОЯ НАСЕЛЕНИЯ ==========
-function addPopulationLayer() {
-    map.addSource('population', {
-        type: 'geojson',
-        data: populationData
-    });
+// function addPopulationLayer() {
+//     map.addSource('population', {
+//         type: 'geojson',
+//         data: populationData
+//     });
     
-    map.addLayer({
-        id: 'population-hex',
-        type: 'fill',
-        source: 'population',
-        paint: {
-            'fill-color': [
-                'interpolate',
-                ['linear'],
-                ['get', 'population'],
-                0, '#fee5d9',
-                5000, '#fcae91',
-                15000, '#fb6a4a',
-                30000, '#de2d26',
-                50000, '#a50f15'
-            ],
-            'fill-opacity': 0.7,
-            'fill-outline-color': '#ffffff'
-        }
-    });
+    // map.addLayer({
+    //     id: 'population-hex',
+    //     type: 'fill',
+    //     source: 'population',
+    //     paint: {
+    //         'fill-color': [
+    //             'interpolate',
+    //             ['linear'],
+    //             ['get', 'population'],
+    //             0, '#fee5d9',
+    //             5000, '#fcae91',
+    //             15000, '#fb6a4a',
+    //             30000, '#de2d26',
+    //             50000, '#a50f15'
+    //         ],
+    //         'fill-opacity': 0.7,
+    //         'fill-outline-color': '#ffffff'
+    //     }
+    // });
+//}
+
+
+// ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ПО ТИПАМ ==========
+
+   // ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ==========
+f// ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ==========
+function addPopperpoiLayer() {
+    if (!popperpoi_data) {
+        console.warn('⚠️ popperpoi_data ещё не загружены');
+        return;
+    }
+    
+    if (!map.getSource('popperpoi')) {
+        map.addSource('popperpoi', {
+            type: 'geojson',
+            data: popperpoi_data
+        });
+        
+        map.addLayer({
+            id: 'popperpoi_layer',
+            type: 'fill',
+            source: 'popperpoi',
+            paint: {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'popperpoi'],   // ← ИСПРАВЛЕНО: поле popperpoi
+                    0, '#af0508',
+                    300, '#D7191C',
+                    750, '#FDAE61',
+                    1500, '#F4EEA5',
+                    2500, '#AFE570',
+                    16100, '#1A9641'
+                ],
+                'fill-opacity': 0.7,
+                'fill-outline-color': '#ffffff'
+            }
+        });
+        
+        console.log('✅ Слой popperpoi добавлен на карту');
+    }
 }
 
 // ========== ДОБАВЛЕНИЕ СЛОЯ POI С РАСКРАСКОЙ ПО ТИПАМ ==========
@@ -139,7 +205,7 @@ function addPOILayer() {
             id: 'poi',
             type: 'circle',
             source: 'poi',
-             minzoom: 13,
+             minzoom: 11,
             paint: {
                 'circle-color': [
                     'match',
