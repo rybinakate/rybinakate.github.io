@@ -1,13 +1,19 @@
-// ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
-let map;
-let populationData;
-let currentIsochroneLayer = null;
-let isHexLayerVisible = true;
-let poiData = null;
-let popperpoi_data;
+// ============================================================================
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// ============================================================================
 
+let map;                          // Объект карты MapLibre
+let populationData;              // Данные о населении (гексагоны)
+let popperpoiData;              // Данные о количестве потенциальных клиентов
+let poiData;                    // Данные о точках питания (кафе, рестораны и т.д.)
+let currentIsochroneLayer = null; // Текущая изохрона (для удаления)
+let isPopulationLayerVisible = true;   // Видимость слоя населения
+let isPopperpoiLayerVisible = true;    // Видимость слоя popperpoi
 
-// ========== ЦВЕТА ДЛЯ РАЗНЫХ ТИПОВ POI ==========
+// ============================================================================
+// ЦВЕТА ДЛЯ РАЗНЫХ ТИПОВ ТОЧЕК ПИТАНИЯ (POI)
+// ============================================================================
+
 const poiColors = {
     'cafe': '#FF6B35',        // оранжевый
     'bakery': '#F7C35C',      // золотистый
@@ -20,244 +26,246 @@ const poiColors = {
     'default': '#0a2a4a'      // синий по умолчанию
 };
 
-// ========== ИНИЦИАЛИЗАЦИЯ ==========
+// ============================================================================
+// ЦВЕТА ДЛЯ СЛОЯ POPPERPOI (градиент от красного к зелёному)
+// ============================================================================
+// Значения: чем больше число, тем больше потенциальных клиентов
+// 0 → красный (плохо), 16100 → зелёный (отлично)
+
+const popperpoiGradient = [
+    0, '#af0508',      // тёмно-красный
+    300, '#D7191C',    // красный
+    750, '#FDAE61',    // оранжевый
+    1500, '#F4EEA5',   // жёлтый
+    2500, '#AFE570',   // салатовый
+    16100, '#1A9641'   // зелёный
+];
+
+// ============================================================================
+// ИНИЦИАЛИЗАЦИЯ КАРТЫ
+// ============================================================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM загружен');
+    console.log('=== ИНИЦИАЛИЗАЦИЯ КАРТЫ ===');
     
+    // Создаём карту с базовым стилем OpenFreeMap
     map = new maplibregl.Map({
         container: 'map',
         style: 'https://tiles.openfreemap.org/styles/positron',
-        center: [37.6173, 55.7558],
-        zoom: 9
-        //maxBounds: [[35, 50], [40, 60]],
-        //hash: true,
+        center: [37.6173, 55.7558],  // Москва, центр
+        zoom: 9,
+        maxZoom: 18,
+        minZoom: 8
     });
 
+    // Добавляем элементы управления
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    
+    // ========================================================================
+    // ЗАГРУЗКА ДАННЫХ
+    // ========================================================================
+    
+    // 1. Загружаем данные POPPERPOI (количество потенциальных клиентов)
+    fetch('../data/popperpoi.geojson')
+        .then(response => response.json())
+        .then(data => {
+            popperpoiData = data;
+            console.log('✅ POPPERPOI загружены! Объектов:', data.features.length);
+        })
+        .catch(error => {
+            console.error('❌ Ошибка загрузки POPPERPOI:', error);
+        });
 
-    // Загружаем PopPerPoi
-fetch('../data/popperpoi.geojson')
-    .then(response => response.json())
-    .then(data => {
-        popperpoi_data = data;
-        console.log('✅ popperpoi загружены! Найдено объектов:', data.features.length);
-        // Добавляем слой после загрузки
-        if (map.isStyleLoaded()) {
-            addPopperpoiLayer();
-        } else {
-            map.on('load', addPopperpoiLayer);
-        }
-    })
-    .catch(error => {
-        console.error('❌ Ошибка загрузки popperpoi:', error);
-    });
+    // 2. Загружаем данные POI (точки питания)
+    fetch('../data/poi.geojson')
+        .then(response => response.json())
+        .then(data => {
+            poiData = data;
+            console.log('✅ POI загружены! Объектов:', data.features.length);
+        })
+        .catch(error => {
+            console.error('❌ Ошибка загрузки POI:', error);
+        });
 
-
-
-    // Загружаем POI
-fetch('../data/poi.geojson')
-    .then(response => response.json())
-    .then(data => {
-        poiData = data;  // ← ИСПРАВЛЕНО: poiData вместо poi
-        console.log('✅ POI загружены! Найдено объектов:', data.features.length);
-    })
-    .catch(error => {
-        console.error('❌ Ошибка загрузки POI:', error);
-    });
-
-    // Загружаем данные о населении
+    // 3. Загружаем данные о населении (гексагоны)
     fetch('../data/population.geojson')
         .then(response => response.json())
         .then(data => {
             populationData = data;
-            console.log('Данные загружены, объектов:', data.features.length);
+            console.log('✅ Данные о населении загружены! Объектов:', data.features.length);
             
-            const totalPopulation = data.features.reduce((sum, feature) => {
-                return sum + (feature.properties.population || 0);
-            }, 0);
-
-            const totalEl = document.getElementById('total-population');
-            if (totalEl) totalEl.textContent = totalPopulation.toLocaleString();
+            // Обновляем статистику в панели
+            updatePopulationStatistics(data);
             
-            const avgDensity = (totalPopulation / data.features.length).toFixed(0);
-            const avgEl = document.getElementById('avg-density');
-            if (avgEl) avgEl.textContent = avgDensity;
-
+            // После загрузки карты добавляем все слои
             map.on('load', () => {
-               // addPopulationLayer();
-                 addPopperpoiLayer();
-                addHexagonInteraction();
-                createIsochroneResultBlock();
-                addPOILayer();  // Добавляем POI после загрузки карты
+                addPopulationLayer();      // Слой населения
+                addPopperpoiLayer();       // Слой потенциальных клиентов
+                addPOILayer();             // Слой точек питания
+                addHexagonInteraction();   // Интерактивность с гексагонами
+                createIsochroneResultBlock(); // Панель для изохроны
+                setupLayerToggleButtons(); // Кнопки переключения слоёв
             });
         })
         .catch(error => {
-            console.error('Ошибка загрузки данных:', error);
+            console.error('❌ Ошибка загрузки данных о населении:', error);
             const mapContainer = document.getElementById('map');
             if (mapContainer) {
-                mapContainer.innerHTML = '<p style="padding: 2rem; text-align: center;">Ошибка загрузки данных</p>';
+                mapContainer.innerHTML = '<p style="padding: 2rem; text-align: center;">❌ Ошибка загрузки данных</p>';
             }
         });
     
-    // ЕДИНСТВЕННЫЙ обработчик клика
+    // ========================================================================
+    // ОБРАБОТЧИК КЛИКА ПО КАРТЕ
+    // ========================================================================
+    
     map.on('click', (e) => {
+        // 1. Рисуем изохрону (5 минут пешком)
         if (populationData) {
             calculateIsochrone(e.lngLat, 5);
         }
         
+        // 2. Показываем количество конкурентов в радиусе 400м
         if (poiData) {
             const count = countCompetitors(e.lngLat, 400);
-            new maplibregl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`🏪 Конкурентов в 400м: ${count}`)
-                .addTo(map);
+            showCompetitorsPopup(e.lngLat, count);
         } else {
-            new maplibregl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`⏳ Загрузка данных...`)
-                .addTo(map);
+            showLoadingPopup(e.lngLat);
         }
     });
 });
 
-// ========== ДОБАВЛЕНИЕ СЛОЯ НАСЕЛЕНИЯ ==========
-// function addPopulationLayer() {
-//     map.addSource('population', {
-//         type: 'geojson',
-//         data: populationData
-//     });
+// ============================================================================
+// ОБНОВЛЕНИЕ СТАТИСТИКИ НАСЕЛЕНИЯ
+// ============================================================================
+
+function updatePopulationStatistics(data) {
+    const totalPopulation = data.features.reduce((sum, feature) => {
+        return sum + (feature.properties.population || 0);
+    }, 0);
+
+    const totalEl = document.getElementById('total-population');
+    if (totalEl) totalEl.textContent = totalPopulation.toLocaleString();
     
-    // map.addLayer({
-    //     id: 'population-hex',
-    //     type: 'fill',
-    //     source: 'population',
-    //     paint: {
-    //         'fill-color': [
-    //             'interpolate',
-    //             ['linear'],
-    //             ['get', 'population'],
-    //             0, '#fee5d9',
-    //             5000, '#fcae91',
-    //             15000, '#fb6a4a',
-    //             30000, '#de2d26',
-    //             50000, '#a50f15'
-    //         ],
-    //         'fill-opacity': 0.7,
-    //         'fill-outline-color': '#ffffff'
-    //     }
-    // });
-//}
-
-
-// ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ПО ТИПАМ ==========
-
-   // ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ==========
-f// ========== ДОБАВЛЕНИЕ СЛОЯ Popperpoi С РАСКРАСКОЙ ==========
-function addPopperpoiLayer() {
-    if (!popperpoi_data) {
-        console.warn('⚠️ popperpoi_data ещё не загружены');
-        return;
-    }
-    
-    if (!map.getSource('popperpoi')) {
-        map.addSource('popperpoi', {
-            type: 'geojson',
-            data: popperpoi_data
-        });
-        
-        map.addLayer({
-            id: 'popperpoi_layer',
-            type: 'fill',
-            source: 'popperpoi',
-            paint: {
-                'fill-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', 'popperpoi'],   // ← ИСПРАВЛЕНО: поле popperpoi
-                    0, '#af0508',
-                    300, '#D7191C',
-                    750, '#FDAE61',
-                    1500, '#F4EEA5',
-                    2500, '#AFE570',
-                    16100, '#1A9641'
-                ],
-                'fill-opacity': 0.7,
-                'fill-outline-color': '#ffffff'
-            }
-        });
-        
-        console.log('✅ Слой popperpoi добавлен на карту');
-    }
+    const avgDensity = (totalPopulation / data.features.length).toFixed(0);
+    const avgEl = document.getElementById('avg-density');
+    if (avgEl) avgEl.textContent = avgDensity;
 }
 
-// ========== ДОБАВЛЕНИЕ СЛОЯ POI С РАСКРАСКОЙ ПО ТИПАМ ==========
+// ============================================================================
+// СЛОЙ НАСЕЛЕНИЯ (гексагоны с градиентом)
+// ============================================================================
+
+function addPopulationLayer() {
+    if (!populationData) return;
+    
+    map.addSource('population', {
+        type: 'geojson',
+        data: populationData
+    });
+    
+    map.addLayer({
+        id: 'population-hex',
+        type: 'fill',
+        source: 'population',
+        paint: {
+            'fill-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'population'],
+                0, '#fee5d9',      // очень светлый (мало людей)
+                5000, '#fcae91',   // светло-оранжевый
+                15000, '#fb6a4a',  // оранжевый
+                30000, '#de2d26',  // красный
+                50000, '#a50f15'   // тёмно-красный (много людей)
+            ],
+            'fill-opacity': 0.7,
+            'fill-outline-color': '#ffffff'
+        }
+    });
+    
+    console.log('✅ Слой населения добавлен');
+}
+
+// ============================================================================
+// СЛОЙ POPPERPOI (количество потенциальных клиентов)
+// ============================================================================
+
+function addPopperpoiLayer() {
+    if (!popperpoiData) return;
+    
+    map.addSource('popperpoi', {
+        type: 'geojson',
+        data: popperpoiData
+    });
+    
+    map.addLayer({
+        id: 'popperpoi-layer',
+        type: 'fill',
+        source: 'popperpoi',
+        paint: {
+            'fill-color': [
+                'interpolate',
+                ['linear'],
+                ['get', 'popperpoi'],
+                ...popperpoiGradient
+            ],
+            'fill-opacity': 0.7,
+            'fill-outline-color': '#ffffff'
+        }
+    });
+    
+    console.log('✅ Слой POPPERPOI добавлен');
+}
+
+// ============================================================================
+// СЛОЙ ТОЧЕК ПИТАНИЯ (POI)
+// ============================================================================
+
 function addPOILayer() {
     if (!poiData) return;
     
-    // Проверяем, что карта загружена и источник ещё не добавлен
-    if (!map.getSource('poi')) {
-        map.addSource('poi', {
-            type: 'geojson',
-            data: poiData
-        });
-        
-        map.addLayer({
-            id: 'poi',
-            type: 'circle',
-            source: 'poi',
-             minzoom: 11,
-            paint: {
-                'circle-color': [
-                    'match',
-                    ['get', 'fclass'],
-                    'cafe', poiColors['cafe'],
-                    'bakery', poiColors['bakery'],
-                    'bar', poiColors['bar'],
-                    'pub', poiColors['pub'],
-                    'restaurant', poiColors['restaurant'],
-                    'fast_food', poiColors['fast_food'],
-                    'food_court', poiColors['food_court'],
-                    'convenience', poiColors['convenience'],
-                    poiColors['default']
-                ],
-                'circle-radius': 3,
-                'circle-stroke-width': 1,
-                'circle-stroke-color': '#ffffff'
-            }
-           
-        });
-        
-        console.log('✅ Слой POI добавлен на карту');
-    }
-}
-
-// ========== ВЗАИМОДЕЙСТВИЕ С ГЕКСАГОНАМИ ==========
-function addHexagonInteraction() {
-    const popup = new maplibregl.Popup({
-        closeButton: false,
-        closeOnClick: false
+    map.addSource('poi', {
+        type: 'geojson',
+        data: poiData
     });
-
-    map.on('mousemove', 'population-hex', (e) => {
-        if (e.features.length > 0 && isHexLayerVisible) {
-            const feature = e.features[0];
-            const population = feature.properties.population || 0;
-            const name = feature.properties.name || 'Район';
-            
-            map.getCanvas().style.cursor = 'pointer';
-            popup.setLngLat(e.lngLat)
-                .setHTML(`<strong>${name}</strong><br/>Население: ${population.toLocaleString()} чел.`)
-                .addTo(map);
+    
+    map.addLayer({
+        id: 'poi-layer',
+        type: 'circle',
+        source: 'poi',
+        minzoom: 12,
+        paint: {
+            'circle-color': [
+                'match',
+                ['get', 'fclass'],
+                'cafe', poiColors['cafe'],
+                'bakery', poiColors['bakery'],
+                'bar', poiColors['bar'],
+                'pub', poiColors['pub'],
+                'restaurant', poiColors['restaurant'],
+                'fast_food', poiColors['fast_food'],
+                'food_court', poiColors['food_court'],
+                'convenience', poiColors['convenience'],
+                poiColors['default']
+            ],
+            'circle-radius': 4,
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#ffffff'
         }
     });
+    
+    console.log('✅ Слой POI добавлен');
+}
 
-    map.on('mouseleave', 'population-hex', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-    });
+// ============================================================================
+// ИНТЕРАКТИВНОСТЬ С ГЕКСАГОНАМИ (без попапа при наведении)
+// ============================================================================
 
+function addHexagonInteraction() {
+    // Только клик по гексагону (убрали попап при наведении)
     map.on('click', 'population-hex', (e) => {
-        if (e.features.length > 0 && isHexLayerVisible) {
+        if (e.features.length > 0) {
             const population = e.features[0].properties.population || 0;
             const selectedEl = document.getElementById('selected-population');
             if (selectedEl) {
@@ -265,14 +273,69 @@ function addHexagonInteraction() {
             }
         }
     });
+    
+    // Меняем курсор при наведении на гексагон (без попапа)
+    map.on('mousemove', 'population-hex', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    
+    map.on('mouseleave', 'population-hex', () => {
+        map.getCanvas().style.cursor = '';
+    });
 }
 
-// ========== ПОДСЧЁТ КОНКУРЕНТОВ ==========
-function countCompetitors(lngLat, radius = 400) {
-    if (!poiData) {
-        console.warn('⚠️ POI ещё не загружены');
-        return 0;
+// ============================================================================
+// КНОПКИ ВКЛЮЧЕНИЯ/ВЫКЛЮЧЕНИЯ СЛОЁВ
+// ============================================================================
+
+function setupLayerToggleButtons() {
+    // Кнопка для слоя населения
+    const togglePopulationBtn = document.getElementById('toggle-population');
+    if (togglePopulationBtn) {
+        togglePopulationBtn.addEventListener('click', () => {
+            if (map.getLayer('population-hex')) {
+                if (isPopulationLayerVisible) {
+                    map.setLayoutProperty('population-hex', 'visibility', 'none');
+                    isPopulationLayerVisible = false;
+                    togglePopulationBtn.textContent = 'Показать население';
+                    togglePopulationBtn.classList.add('active');
+                } else {
+                    map.setLayoutProperty('population-hex', 'visibility', 'visible');
+                    isPopulationLayerVisible = true;
+                    togglePopulationBtn.textContent = 'Скрыть население';
+                    togglePopulationBtn.classList.remove('active');
+                }
+            }
+        });
     }
+    
+    // Кнопка для слоя popperpoi
+    const togglePopperpoiBtn = document.getElementById('toggle-popperpoi');
+    if (togglePopperpoiBtn) {
+        togglePopperpoiBtn.addEventListener('click', () => {
+            if (map.getLayer('popperpoi-layer')) {
+                if (isPopperpoiLayerVisible) {
+                    map.setLayoutProperty('popperpoi-layer', 'visibility', 'none');
+                    isPopperpoiLayerVisible = false;
+                    togglePopperpoiBtn.textContent = 'Показать клиентов';
+                    togglePopperpoiBtn.classList.add('active');
+                } else {
+                    map.setLayoutProperty('popperpoi-layer', 'visibility', 'visible');
+                    isPopperpoiLayerVisible = true;
+                    togglePopperpoiBtn.textContent = 'Скрыть клиентов';
+                    togglePopperpoiBtn.classList.remove('active');
+                }
+            }
+        });
+    }
+}
+
+// ============================================================================
+// ПОДСЧЁТ КОНКУРЕНТОВ В РАДИУСЕ
+// ============================================================================
+
+function countCompetitors(lngLat, radius = 400) {
+    if (!poiData) return 0;
     
     const center = turf.point([lngLat.lng, lngLat.lat]);
     const buffer = turf.buffer(center, radius / 1000, { units: 'kilometers' });
@@ -280,28 +343,53 @@ function countCompetitors(lngLat, radius = 400) {
     let count = 0;
     
     poiData.features.forEach(feature => {
-        if (!feature.geometry) return;
-        if (feature.geometry.type !== 'Point') return;
+        if (!feature.geometry || feature.geometry.type !== 'Point') return;
         
-        const pointCoords = feature.geometry.coordinates;
-        
-        if (!Array.isArray(pointCoords) || pointCoords.length < 2) return;
-        if (typeof pointCoords[0] !== 'number' || typeof pointCoords[1] !== 'number') return;
+        const coords = feature.geometry.coordinates;
+        if (!Array.isArray(coords) || coords.length < 2) return;
+        if (typeof coords[0] !== 'number' || typeof coords[1] !== 'number') return;
         
         try {
-            const point = turf.point(pointCoords);
-            if (turf.booleanPointInPolygon(point, buffer)) {
-                count++;
-            }
-        } catch (e) {
-            // Пропускаем проблемные точки
-        }
+            const point = turf.point(coords);
+            if (turf.booleanPointInPolygon(point, buffer)) count++;
+        } catch (e) {}
     });
     
     return count;
 }
 
-// ========== ИЗОХРОНЫ ==========
+// ============================================================================
+// ВСПЛЫВАЮЩИЕ ОКНА
+// ============================================================================
+
+function showCompetitorsPopup(lngLat, count) {
+    new maplibregl.Popup()
+        .setLngLat(lngLat)
+        .setHTML(`🏪 Конкурентов в 400м: ${count}`)
+        .addTo(map);
+    
+    setTimeout(() => {
+        const popup = document.querySelector('.maplibregl-popup');
+        if (popup) popup.remove();
+    }, 3000);
+}
+
+function showLoadingPopup(lngLat) {
+    new maplibregl.Popup()
+        .setLngLat(lngLat)
+        .setHTML(`⏳ Загрузка данных...`)
+        .addTo(map);
+    
+    setTimeout(() => {
+        const popup = document.querySelector('.maplibregl-popup');
+        if (popup) popup.remove();
+    }, 2000);
+}
+
+// ============================================================================
+// ИЗОХРОНА (пешеходная доступность)
+// ============================================================================
+
 function calculateIsochrone(center, minutes, speed = 80) {
     if (!populationData) return;
     
@@ -309,37 +397,75 @@ function calculateIsochrone(center, minutes, speed = 80) {
     const point = turf.point([center.lng, center.lat]);
     const isochrone = turf.buffer(point, radius / 1000, { units: 'kilometers' });
     
-    const { totalPopulation, intersectingCount } = sumPopulationInArea(isochrone);
+    const { totalPopulation, intersectingCount } = sumPopulationInAreaProportional(isochrone);
     displayIsochrone(isochrone, center, minutes, totalPopulation, intersectingCount);
 }
 
-function sumPopulationInArea(polygon) {
+// ============================================================================
+// ПРОПОРЦИОНАЛЬНЫЙ ПОДСЧЁТ НАСЕЛЕНИЯ (с учётом доли площади)
+// ============================================================================
+// Это ключевое улучшение! Теперь учитывается, какую часть гексагона
+// захватывает изохрона, и население берётся пропорционально.
+
+function sumPopulationInAreaProportional(polygon) {
     if (!populationData) return { totalPopulation: 0, intersectingCount: 0 };
     
     let totalPopulation = 0;
     let intersectingCount = 0;
     
     populationData.features.forEach(feature => {
-        if (turf.booleanIntersects(polygon, feature.geometry)) {
-            totalPopulation += feature.properties.population || 0;
+        const hexGeometry = feature.geometry;
+        
+        // Проверяем пересечение
+        if (turf.booleanIntersects(polygon, hexGeometry)) {
             intersectingCount++;
+            
+            // Вычисляем площадь пересечения
+            let intersectionArea = 0;
+            let hexArea = 0;
+            
+            try {
+                // Находим площадь пересечения
+                const intersection = turf.intersect(polygon, hexGeometry);
+                if (intersection) {
+                    intersectionArea = turf.area(intersection);
+                }
+                
+                // Площадь гексагона
+                hexArea = turf.area(hexGeometry);
+                
+                // Пропорция захваченной площади
+                const proportion = hexArea > 0 ? intersectionArea / hexArea : 0;
+                
+                // Берём пропорциональную часть населения
+                const population = feature.properties.population || 0;
+                totalPopulation += population * proportion;
+                
+            } catch (e) {
+                // Если ошибка при расчёте пересечения, берём всё население
+                console.warn('Ошибка при расчёте пересечения:', e);
+                totalPopulation += feature.properties.population || 0;
+            }
         }
     });
     
-    return { totalPopulation, intersectingCount };
+    return { 
+        totalPopulation: Math.round(totalPopulation), 
+        intersectingCount 
+    };
 }
 
 function displayIsochrone(isochrone, center, minutes, population, intersectingCount) {
+    // Удаляем предыдущую изохрону
     if (currentIsochroneLayer) {
         try {
             if (map.getLayer('isochrone-fill')) map.removeLayer('isochrone-fill');
             if (map.getLayer('isochrone-outline')) map.removeLayer('isochrone-outline');
             if (map.getSource('isochrone')) map.removeSource('isochrone');
-        } catch(e) {
-            console.warn('Ошибка при удалении слоёв:', e);
-        }
+        } catch(e) {}
     }
     
+    // Добавляем новую изохрону
     map.addSource('isochrone', {
         type: 'geojson',
         data: isochrone
@@ -368,6 +494,7 @@ function displayIsochrone(isochrone, center, minutes, population, intersectingCo
     
     currentIsochroneLayer = true;
     
+    // Обновляем панель статистики
     const resultBlock = document.getElementById('isochrone-result');
     if (resultBlock) {
         resultBlock.style.background = '#e8f4f8';
@@ -402,9 +529,7 @@ function resetIsochrone() {
             if (map.getLayer('isochrone-fill')) map.removeLayer('isochrone-fill');
             if (map.getLayer('isochrone-outline')) map.removeLayer('isochrone-outline');
             if (map.getSource('isochrone')) map.removeSource('isochrone');
-        } catch(e) {
-            console.warn('Ошибка при удалении:', e);
-        }
+        } catch(e) {}
         currentIsochroneLayer = null;
         
         const resultBlock = document.getElementById('isochrone-result');
@@ -419,32 +544,13 @@ function resetIsochrone() {
     }
 }
 
-function toggleHexLayer() {
-    const toggleBtn = document.getElementById('toggle-hex-layer');
-    if (map && map.getLayer('population-hex')) {
-        if (isHexLayerVisible) {
-            map.setLayoutProperty('population-hex', 'visibility', 'none');
-            isHexLayerVisible = false;
-            if (toggleBtn) toggleBtn.textContent = 'Показать районы';
-            if (toggleBtn) toggleBtn.classList.add('active');
-        } else {
-            map.setLayoutProperty('population-hex', 'visibility', 'visible');
-            isHexLayerVisible = true;
-            if (toggleBtn) toggleBtn.textContent = 'Скрыть районы';
-            if (toggleBtn) toggleBtn.classList.remove('active');
-        }
-    }
-}
+// ============================================================================
+// НАСТРОЙКА КНОПОК
+// ============================================================================
 
-// ========== НАСТРОЙКА КНОПОК ==========
 document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-analytics');
     if (resetBtn) {
         resetBtn.addEventListener('click', resetIsochrone);
-    }
-    
-    const toggleBtn = document.getElementById('toggle-hex-layer');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', toggleHexLayer);
     }
 });

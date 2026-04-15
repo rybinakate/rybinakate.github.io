@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализ коммерческого потенциала локаций для F&B проектов| Ваше Имя</title>
+    <title>Анализ коммерческого потенциала локаций для F&B проектов</title>
    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" />
   
@@ -69,8 +69,7 @@
 
     <main>
         <h1>Анализ коммерческого потенциала локаций для F&B проектов</h1>
-       <p class="description-text">Интерактивная карта показывает распределение населения в выбранном районе. 
-   Нажмите на любой хексагон, чтобы увидеть точное количество жителей.</p>
+       <p class="description-text">Геоаналитика для определения потенциала развития сети пунктов общественного питания</p>
 
         <div class="info-panel">
             <div class="stats" id="stats-panel">
@@ -86,8 +85,10 @@
         </div>
 
 <div class="analytics-controls">
-    <button id="toggle-hex-layer" class="analytics-btn"> Скрыть районы</button>
+    <button id="toggle-population" class="analytics-btn">Скрыть население</button>
+    <button id="toggle-popperpoi" class="analytics-btn">Скрыть индекс насыщенности</button>
     <button id="reset-analytics" class="analytics-btn">Сбросить изохрону</button>
+    
 </div>
 
 
@@ -98,18 +99,33 @@
 
 <!-- Легенда -->
 <div class="legend">
-    <div class="legend-title">📊 Условные обозначения</div>
+    <div class="legend-title">Условные обозначения</div>
     
     <div class="legend-section">
         <div class="legend-subtitle">Население (чел/гексагон)</div>
         <div class="legend-gradient">
-            <div class="gradient-bar"></div>
+            <div class="gradient-bar population-gradient"></div>
             <div class="gradient-labels">
                 <span>0</span>
                 <span>5k</span>
                 <span>15k</span>
                 <span>30k</span>
-                <!-- <span>50k+</span> -->
+                <span>50k+</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Индекс насыщенности рынка F&B</div>
+        <div class="legend-gradient">
+            <div class="gradient-bar popperpoi-gradient"></div>
+            <div class="gradient-labels">
+                <span>0</span>
+                <span>300</span>
+                <span>750</span>
+                <span>1.5k</span>
+                <span>2.5k</span>
+                <span>16k+</span>
             </div>
         </div>
     </div>
@@ -117,58 +133,103 @@
     <div class="legend-section">
         <div class="legend-subtitle">Типы точек питания</div>
         <div class="legend-items">
-            <div class="legend-item">
-                <span class="legend-color" style="background: #FF6B35;"></span>
-                <span>Кафе</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background: #F7C35C;"></span>
-                <span>Пекарни</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background: #9B5DE5;"></span>
-                <span>Бары / Пабы</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background: #F15BB5;"></span>
-                <span>Рестораны</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background: #00BBF9;"></span>
-                <span>Фастфуд</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-color" style="background: #00F5D4;"></span>
-                <span>Фуд-корты</span>
-            </div>
+            <div class="legend-item"><span class="legend-color" style="background: #FF6B35;"></span><span>Кафе</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #F7C35C;"></span><span>Пекарни</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #9B5DE5;"></span><span>Бары / Пабы</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #F15BB5;"></span><span>Рестораны</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #00BBF9;"></span><span>Фастфуд</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #00F5D4;"></span><span>Фуд-корты</span></div>
         </div>
     </div>
     
     <div class="legend-section">
-        <div class="legend-subtitle">Аналитика</div>
-        <div class="legend-item">
-            <span class="legend-line" style="background: #ff0000;"></span>
-            <span>Изохрона (5 мин пешком)</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-point"></span>
-            <span>Клик — подсчёт конкурентов</span>
-        </div>
+      
+        <div class="legend-item"><span class="legend-line"></span><span>Изохрона (5 мин пешком)</span></div>
+    
     </div>
 </div>
 
 
+<div class="project-description">
+    <h3>О карте</h3>
+    <p>На карте представлены пространственные данные, позволяющие оценить распределение населения, существующую инфраструктуру питания и рассчитать аналитический показатель — индекс насыщенности рынка Food &amp; Beverage (F&amp;B). Карта предназначена для предварительного анализа локаций при планировании открытия новых точек питания, а также для изучения конкурентной среды в различных районах города.</p>
+    
+    <br>
+    <h4>Данные о населении</h4>
+    <p>Информация о численности населения представлена в виде гексагональных ячеек (H3). Такой формат удобен для пространственного анализа, поскольку все ячейки имеют одинаковую площадь и не искажают реальное распределение людей в отличие от административных границ. Данные получены из открытого источника Kontur Population, который агрегирует информацию из различных спутниковых и статистических данных. Цвет гексагона варьируется от светло-розового до тёмно-бордового в зависимости от количества жителей: чем темнее цвет, тем больше людей проживает в данной ячейке.</p>
+    
+    <br>
+    <h4>Точки питания</h4>
+    <p>На карту нанесены существующие заведения общественного питания из открытого картографического источника OpenStreetMap. В выборку включены следующие категории:</p>
+    <ul>
+        <li>рестораны</li>
+        <li>кафе</li>
+        <li>пекарни</li>
+        <li>бары и пабы</li>
+        <li>предприятия быстрого питания (фастфуд)</li>
+        <li>фудкорты</li>
+    </ul>
+    <p>Каждая точка имеет свой цвет в зависимости от типа заведения. Это позволяет визуально оценить, какие форматы преобладают в том или ином районе, и выявить возможные ниши, не занятые конкурентами.</p>
 
+    <br>
+    <h4>Индекс насыщенности рынка F&amp;B</h4>
+    <p>Для каждого гексагона рассчитан индекс насыщенности рынка F&amp;B. Этот показатель вычисляется как отношение числа жителей к количеству точек питания в пределах одного гексагона.</p>
+    <p><strong>Формула:</strong> <code>Индекс насыщенности = Население гексагона / Количество точек питания в гексагоне</code></p>
+   
+    <br>
+    <p><strong>Интерпретация индекса:</strong></p>
+    <ul>
+        <li>Низкие значения (менее 500 жителей на одну точку питания) — высокая концентрация заведений, рынок перенасыщен, высокая конкуренция.</li>
+        <li>Средние значения (500–1500 жителей на одну точку питания) — умеренная конкуренция, рынок сбалансирован.</li>
+        <li>Высокие значения (более 1500 жителей на одну точку питания) — недостаток предложения, наличие свободной ниши для открытия нового бизнеса.</li>
+    </ul>
+    <p>Цветовая схема индекса построена по градиенту от красного (высокая конкуренция) до зелёного (свободная ниша).</p>
 
-        <div class="project-description">
-            <h3>О проекте</h3>
-            <p class="description-text">Для этого проекта использовались данные Kontur Population (H3-хексагоны с населением).
-                Каждый хексагон окрашен в зависимости от плотности населения:
-                светлый — низкая плотность, темный — высокая.</p>
-            <p><strong>Технологии:</strong> Maplibre GL JS, GeoJSON, HTML/CSS, JavaScript</p>
-            <p><a href="https://github.com/rybinakate/rybinakate.github.io" target="_blank">Исходный код на
-                    GitHub</a></p>
-        </div>
+    <br>
+    <h4>Интерактивные возможности</h4>
+    <p>Карта поддерживает взаимодействие для получения детальную информацию о выбранной локации.</p>
+    <ul>
+       
+        <li>Клик по карте — автоматически строится 5-минутная изохрона (зона пешеходной доступности). Изохрона показывает территорию, которую человек может пройти за 5 минут от выбранной точки (при средней скорости пешехода 80 метров в минуту, радиус составляет 400 метров). Внутри этой зоны подсчитывается количество существующих точек питания (конкурентов). Результат отображается во всплывающем окне.</li>
+    </ul>
+  
+<br>
+    <h4>Панель статистики</h4>
+    <p>В верхней части экрана расположена панель, которая в реальном времени отображает:</p>
+    <ul>
+       
+        <li>население выбранного гексагона </li>
+        <li>население в зоне изохроны </li>
+    </ul>
+
+    <br>
+    <h4>Переключение слоёв</h4>
+    <p>С помощью кнопок управления можно включать и отключать отображение слоёв:</p>
+    <ul>
+        <li>Слой населения — отображает гексагоны с цветовой индикацией плотности населения.</li>
+        <li>Слой индекса насыщенности рынка— показывает расчётное количество потенциальных клиентов для точек питания (агрегированный показатель, основанный на плотности населения и других факторах).</li>
+        <li>Сброс изохроны — Кнопка позволяет удалить созданную пользователем изохрону.</li>
+    </ul>
+    
+    
+    <br>
+    <h4>Технологии и источники данных</h4>
+    <ul>
+        <li>Библиотека для работы с картой: MapLibre GL JS</li>
+        <li>Пространственный анализ: Turf.js (расчёт изохрон, пересечений, буферных зон)</li>
+        <li>Данные о населении: Kontur Population (гексагоны)</li>
+        <li>Данные о точках питания: OpenStreetMap (OSM)</li>
+        <li>Стиль карты: OpenFreeMap / Positron</li>
+    </ul>
+
+      <br>
+     <p>Данный проект я реализовала на frontend, данные были подгружены в виде geojson файлов непосредственно в проект. Такой подход обусловлен техническимт ограничениями GitPages. 
+            При необходимости и наличии технических возможностей возможна реализация проекта с разворачиванием базы данных на PostgreSql и/или подключении сервиса векторных тайлов.  </p>
+      <br>
+    <p><a href="https://github.com/rybinakate/rybinakate.github.io" target="_blank" rel="noopener noreferrer">🔗 Исходный код на GitHub</a></p>
+</div>
+
+       
     </main>
 
     <footer>

@@ -635,3 +635,171 @@ main h1 {
         font-size: 1.2rem;
     }
 }
+
+/* Градиент для населения */
+.gradient-bar.population-gradient {
+    background: linear-gradient(90deg, #fee5d9, #fcae91, #fb6a4a, #de2d26, #a50f15);
+}
+
+/* Градиент для popperpoi */
+.gradient-bar.popperpoi-gradient {
+    background: linear-gradient(90deg, #af0508, #D7191C, #FDAE61, #F4EEA5, #AFE570, #1A9641);
+}
+
+/* ===== АДАПТИВ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ ===== */
+@media (max-width: 768px) {
+    /* Легенда на мобильных — под картой */
+    .legend {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Контейнер карты — обычный блок */
+    .map-container {
+        margin-bottom: 0;
+    }
+}
+/* ===== СТРАНИЦА ПУБЛИКАЦИЙ ===== */
+@media (max-width: 768px) {
+    .publications-list li {
+        font-size: 0.85rem;
+    }
+    
+  .publication-year {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: normal;
+    background: none;
+    padding: 0;
+    margin: 0;
+    display: inline;
+}
+}
+
+.publication-authors {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.publication-title {
+    font-style: italic;
+    color: #555;
+}
+
+.publication-journal {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* ===== КАРЬЕРНЫЙ ПУТЬ ===== */
+.career-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.career-item:last-child {
+    border-bottom: none;
+}
+
+.career-header {
+    margin-bottom: 0.8rem;
+}
+
+.career-organization {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+.career-period {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+}
+
+.career-badge {
+    display: inline-block;
+    background: #dbecf6;
+    color: rgb(33, 33, 33);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+}
+
+.career-profile,
+.career-role {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.career-achievements {
+    margin-left: 1.2rem;
+    margin-top: 0.8rem;
+}
+
+.career-achievements li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+    color: #444;
+}
+
+.career-achievements li strong {
+    color: #436698;
+}
+
+@media (max-width: 768px) {
+    .career-organization {
+        font-size: 1rem;
+    }
+    
+    .career-period {
+        font-size: 0.75rem;
+    }
+    
+    .career-achievements {
+        margin-left: 1rem;
+    }
+    
+    .career-achievements li {
+        font-size: 0.85rem;
+    }
+}
+
+/* Элемент списка с заголовком */
+.description-list-item {
+    margin-bottom: 0.8rem;
+}
+
+.description-list-title {
+    font-weight: 600;
+    color: #2c3e50;
+    display: inline;
+}
+
+.description-list-text {
+    color: #555;
+    display: inline;
+}
+
+/* Вложенный список */
+.description-sublist {
+    margin-left: 1.5rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
+    list-style-type: circle;
+}
+
+.description-sublist li {
+    margin-bottom: 0.2rem;
+    color: #555;
+}
