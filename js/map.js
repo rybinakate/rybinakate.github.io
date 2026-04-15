@@ -152,6 +152,7 @@ function updatePopulationStatistics(data) {
     if (avgEl) avgEl.textContent = avgDensity;
 }
 
+
 // ============================================================================
 // СЛОЙ НАСЕЛЕНИЯ (гексагоны с градиентом)
 // ============================================================================
@@ -265,7 +266,7 @@ function addPOILayer() {
 function addHexagonInteraction() {
     // Только клик по гексагону (убрали попап при наведении)
     map.on('click', 'population-hex', (e) => {
-        if (e.features.length > 0) {
+        if (e.features.length > 0 && isPopulationLayerVisible) {
             const population = e.features[0].properties.population || 0;
             const selectedEl = document.getElementById('selected-population');
             if (selectedEl) {
@@ -494,7 +495,19 @@ function displayIsochrone(isochrone, center, minutes, population, intersectingCo
     
     currentIsochroneLayer = true;
     
-    // Обновляем панель статистики
+    // ========== ОБНОВЛЯЕМ БОКОВУЮ ПАНЕЛЬ СТАТИСТИКИ ==========
+    const isochronePanelEl = document.getElementById('isochrone-population');
+    if (isochronePanelEl) {
+        isochronePanelEl.textContent = population.toLocaleString();
+    }
+    
+    // ========== ПОДСВЕЧИВАЕМ КАРТОЧКУ ИЗОХРОНЫ ==========
+    const statIsochroneCard = document.getElementById('stat-isochrone');
+    if (statIsochroneCard) {
+        statIsochroneCard.classList.add('active');
+    }
+    
+    // ========== ОБНОВЛЯЕМ СТАРЫЙ БЛОК (для обратной совместимости) ==========
     const resultBlock = document.getElementById('isochrone-result');
     if (resultBlock) {
         resultBlock.style.background = '#e8f4f8';
@@ -532,6 +545,19 @@ function resetIsochrone() {
         } catch(e) {}
         currentIsochroneLayer = null;
         
+        // ========== СБРАСЫВАЕМ БОКОВУЮ ПАНЕЛЬ ==========
+        const isochronePanelEl = document.getElementById('isochrone-population');
+        if (isochronePanelEl) {
+            isochronePanelEl.textContent = '—';
+        }
+        
+        // ========== УБИРАЕМ ПОДСВЕТКУ ==========
+        const statIsochroneCard = document.getElementById('stat-isochrone');
+        if (statIsochroneCard) {
+            statIsochroneCard.classList.remove('active');
+        }
+        
+        // ========== СБРАСЫВАЕМ СТАРЫЙ БЛОК ==========
         const resultBlock = document.getElementById('isochrone-result');
         if (resultBlock) {
             resultBlock.style.background = '#f0f0f0';

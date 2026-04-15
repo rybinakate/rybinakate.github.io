@@ -71,18 +71,26 @@
         <h1>Анализ коммерческого потенциала локаций для F&B проектов</h1>
        <p class="description-text">Геоаналитика для определения потенциала развития сети пунктов общественного питания</p>
 
-        <div class="info-panel">
-            <div class="stats" id="stats-panel">
-              
-                <div class="stat-card">
-                    <div class="stat-value" id="selected-population">—</div>
-                    <div class="stat-label">Выбрано жителей</div>
-                </div>
-
-
-                
-            </div>
+        <!-- Боковая панель статистики -->
+<!-- Боковая панель статистики -->
+<div class="stats-panel">
+    <div class="stats-panel-title">
+        <span></span> Аналитика локации
+    </div>
+    <div class="stats-panel-content">
+        <div class="stat-card-panel" id="stat-hexagon">
+            <div class="stat-label-panel">Выбранный район</div>
+            <div class="stat-value-panel"><span id="selected-population">—</span> <span class="stat-unit-panel">чел</span></div>
         </div>
+        
+        <div class="stat-card-panel" id="stat-isochrone">
+            <div class="stat-label-panel">В 5 мин ходьбы</div>
+            <div class="stat-value-panel"><span id="isochrone-population">—</span> <span class="stat-unit-panel">чел</span></div>
+        </div>
+    </div>
+</div>
+
+
 
 <div class="analytics-controls">
     <button id="toggle-population" class="analytics-btn">Скрыть население</button>
