@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каттарская впадина | ГИС и ДЗЗ анализ | Екатерина Рыбина</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ СТРАНИЦЫ ПРОЕКТА ===== */
+        .project-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .project-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .project-header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-header .subtitle {
+            font-size: 1rem;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .project-header .author {
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 1rem 0 0.8rem 0;
+            font-weight: 600;
+        }
+        
+        .goals-list {
+            background: #e8f4f8;
+            padding: 1.2rem;
+            border-radius: 12px;
+            list-style: none;
+        }
+        
+        .goals-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .goals-list li::before {
+            content: "●";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .tech-item {
+            background: #f0f0f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #2c3e50;
+        }
+        
+        .data-sources {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .data-card {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .data-card strong {
+            color: #2c3e50;
+        }
+        
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .scenario-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .scenario-header {
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .scenario-header.scenario-1 {
+            background: #de2d26;
+            color: white;
+        }
+        
+        .scenario-header.scenario-2 {
+            background: #fb6a4a;
+            color: white;
+        }
+        
+        .scenario-header.scenario-3 {
+            background: #2c7fb8;
+            color: white;
+        }
+        
+        .scenario-body {
+            padding: 1rem;
+        }
+        
+        .scenario-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .scenario-stat-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .scenario-stat-value {
+            color: #2c3e50;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+        
+        .comparison-table th {
+            background: #2c3e50;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .comparison-table td:first-child {
+            font-weight: 600;
+            background: #f8f9fa;
+            text-align: left;
+        }
+        
+        .conclusion {
+            background: #e8f4f8;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        
+        .conclusion p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .contacts {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .image-placeholder {
+            background: #f0f0f0;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: #999;
+        }
+        
+        .image-caption {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-top: 0.3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <div class="project-container">
+            <div class="project-header">
+                <h1>Каттарская впадина: гениальный проект или безумная идея?</h1>
+                <div class="subtitle">Оценка средствами ГИС и ДЗЗ</div>
+            </div>
+
+            <!-- Вводная часть -->
+            <div class="section">
+                <h2 class="section-title">География</h2>
+                <p>Каттарская впадина расположена на северо-западе Египта, в Ливийской пустыне, примерно в 300 км к западу от Каира и в 76 км к югу от побережья Средиземного моря.</p>
+                
+                <img src="/assets/images/Geography.jpg" alt="Карта Каттарской впадины" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Рис. 1. Расположение Каттарской впадины</div>
+            </div>
+
+            <!-- Литература -->
+            <div class="section">
+
+
+               <p>Идея развития Каттарской впадины — классический пример грандиозного, но пока нереализованного инженерного проекта. Основная 
+                концепция заключается в использовании перепада высот между Средиземным морем и впадиной для производства электроэнергии.
+            Мне было интересно рассмотреть  этот проект с использованием современных методов и технологий, 
+            использую открытые источники данных.  </p>
+           
+        
+ <br>
+                <h2 class="section-title">Историческая справка</h2>
+                  <p>Проект активно прорабатывался в XX веке. Ниже приведены основные исследователи  и их работы, посвященные Каттарской впадине.</p>
+                   <br>
+                <ul>
+                    <li>John Ball (1933) — первое детальное исследование впадины для энергопроизводства</li>
+                    <li>Bassler F. (1972) — проект солнечной электростанции</li>
+                    <li>De Martino G (1973) — технический отчёт Гидравлического института Неаполя</li>
+                    <li>Kelada M (2010) — оценка потенциала гиперсолёной энергогенерации</li>
+                    <li>Elsayed Marwa Adel, Ismaeel Walaa S.E. (2019) — экологическая оценка проекта</li>
+                    <li>Elite Capital & Co (2023) — новое технико-экономическое обоснование</li>
+                </ul>
+            </div>
+
+            <!-- Цели и задачи -->
+            <div class="section">
+                <h2 class="section-title">🎯 Цели и задачи исследования</h2>
+                <ul class="goals-list">
+                    <li>Проанализировать различные сценарии по развитию Каттарской впадины в Египте</li>
+                    <li>Оценить потенциал и возможные риски проекта</li>
+                </ul>
+            </div>
+
+            <!-- Программные средства -->
+            <div class="section">
+                <h2 class="section-title">🛠️ Программные средства (Open Source & Free)</h2>
+                <div class="tech-stack">
+                    <span class="tech-item">QGIS</span>
+                    <span class="tech-item">PostgreSQL/PostGIS</span>
+                    <span class="tech-item">Python</span>
+                    <span class="tech-item">Google Earth Engine</span>
+                    <span class="tech-item">MapLibre GL JS</span>
+                </div>
+            </div>
+
+            <!-- ЦМР -->
+            <div class="section">
+                <h2 class="section-title">Рельеф</h2>
+                <p>По данным цифровой модели местности Copernicus (30 м/пкс) была построена карта рельефа Египта, на которой можно отметить уникальное высотное положение Каттарской низменности.</p>
+                
+                <img src="/assets/images/dem.jpg" alt="Карта рельефа Египта" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Рис. 2. Впадина расположена ниже отметки -50 м относительно Средиземного моря</div>
+            </div>
+
+            <!-- Геология -->
+            <div class="section">
+                <h2 class="section-title">Геология</h2>
+                <p>По данным Global Lithological Map Database, WHYMAP, U.S. Geological Survey's World Energy Project (WEP), NOAA National Centers for Environmental Information я сделала геологическую карту Египта. Можно отметить, что Каттарская низменность по большей части сложена эвапоритами и находится в зоне карстовых процессов. Оба эти фактора имеют огромное значение и являются серьезными лимитирующими факторами при разработке проекта эксплуатации низменности.</p>
+                
+                <img src="/assets/images/Geology.jpg" alt="Геологическая карта Египта" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Рис. 3. Геологическая карта Египта</div>
+            </div>
+
+            <!-- Подземные воды -->
+            <div class="section">
+                <h2 class="section-title">Подземные воды</h2>
+                <p>По данным WHYMAP я сделала карту, отражающую состояние подземных вод Египта. Каттарская впадина частично находится в зоне засоленных подземных вод и имеет небольшие запасы приповерхностных подземных вод. Отдельно стоит отметить, что при этом на глубинах свыше 250 м запасы подземных вод в этой части Африки колоссальные.</p>
+                
+                <img src="/assets/images/Gw.jpg" alt="Подземные воды Египта" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Рис. 4. Подземные воды Египта</div>
+            </div>
+
+            <!-- Климат -->
+            <div class="section">
+                <h2 class="section-title">Климат</h2>
+                <p>По данным WorldClim я сделала подборку климатических карт Египта, по которым легко можно заметить, что для впадины характерен крайне сухой климат. Количество выпадающих осадков варьируется от 25 до 50 мм на севере, тогда как южная часть получает не более 25 мм. Летом средняя температура воздуха днём держится на отметке 36,2 °C, а зимой опускается до 6,2 °C. Господствующие ветры дуют с севера, причём их пиковая скорость (11,5 м/с) фиксируется в марте, а самая низкая (3,2 м/с) — в декабре.</p>
+                
+                <!-- Слайдер изображений 1 -->
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider" id="imageSlider">
+                            <div class="slide">
+                                <img src="/assets/images/temp_max.jpg" alt="Максимальная температура">
+                                <div class="slide-caption">Максимальная температура (июль)</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/temp_min.jpg" alt="Минимальная температура">
+                                <div class="slide-caption">Минимальная температура (январь)</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/precipitation.jpg" alt="Осадки">
+                                <div class="slide-caption">Осадки</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/Watervaporpressure.jpg" alt="Давление водяного пара">
+                                <div class="slide-caption">Давление водяного пара</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/sun_radiation.jpg" alt="Солнечная радиация">
+                                <div class="slide-caption">Солнечная радиация</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/wind_speed.jpg" alt="Скорость ветра">
+                                <div class="slide-caption">Скорость ветра</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопки навигации для первого слайдера -->
+                    <button class="slider-btn prev-btn" id="prevBtn">❮</button>
+                    <button class="slider-btn next-btn" id="nextBtn">❯</button>
+                    
+                    <!-- Индикаторы для первого слайдера -->
+                    <div class="slider-dots" id="sliderDots"></div>
+                </div>
+            </div>
+
+            <!-- NDVI -->
+            <div class="section">
+                <h2 class="section-title">NDVI</h2>
+                <p>Для расчета NDVI использован Google Earth Engine. Я анализировала январские мозаики Landsat за период 1986-2025 гг. Январь был выбран как наиболее влажный месяц, а мозаика составлялась для обеспечения безоблачного покрытия территории. Анализ распределения индекса показал, что в северной части Каттарской впадины растительность отсутствует, а в южной части периодически появляется.</p>
+                
+                <!-- Слайдер изображений 2 -->
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider" id="imageSlider2">
+                            <div class="slide">
+                                <img src="/assets/images/ndvi1986.jpg" alt="NDVI, 1986">
+                                <div class="slide-caption">NDVI, январь 1986</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi1990.jpg" alt="NDVI, 1990">
+                                <div class="slide-caption">NDVI, январь 1990</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2000.jpg" alt="NDVI, 2000">
+                                <div class="slide-caption">NDVI, январь 2000</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2005.jpg" alt="NDVI, 2005">
+                                <div class="slide-caption">NDVI, январь 2005</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2010.jpg" alt="NDVI, 2010">
+                                <div class="slide-caption">NDVI, январь 2010</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2015.jpg" alt="NDVI, 2015">
+                                <div class="slide-caption">NDVI, январь 2015</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2020.jpg" alt="NDVI, 2020">
+                                <div class="slide-caption">NDVI, январь 2020</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2022.jpg" alt="NDVI, 2022">
+                                <div class="slide-caption">NDVI, январь 2022</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2025.jpg" alt="NDVI, 2025">
+                                <div class="slide-caption">NDVI, январь 2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопки навигации для второго слайдера -->
+                    <button class="slider-btn prev-btn" id="prevBtn2">❮</button>
+                    <button class="slider-btn next-btn" id="nextBtn2">❯</button>
+                    
+                    <!-- Индикаторы для второго слайдера -->
+                    <div class="slider-dots" id="sliderDots2"></div>
+                </div>
+            </div>
+
+
+
+            <!-- Морфометрические характеристики -->
+            <div class="section">
+                <h2 class="section-title">Морфометрические характеристики Каттарской впадины</h2>
+                <p>По данным ЦМР мной были рассчитаны проектные характеристики площади и объема возможного водохранилища. 
+                    Рассмотрены уровни заполнения от -50 м до -130 м.</p>
+
+                <div class="section-subtitle">Площади и объёмы</div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Уровень, м</th><th>Площадь, км²</th><th>Объём, км³</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>-50</td><td>14 178</td><td>362</td></tr>
+                        <tr><td>-60</td><td>12 617</td><td>228</td></tr>
+                        <tr><td>-70</td><td>9 788</td><td>113</td></tr>
+                        <tr><td>-80</td><td>4 661</td><td>38</td></tr>
+                        <tr><td>-90</td><td>1 265</td><td>15</td></tr>
+                        <tr><td>-100</td><td>510</td><td>6</td></tr>
+                        <tr><td>-110</td><td>241</td><td>3,0</td></tr>
+                        <tr><td>-120</td><td>160</td><td>1,0</td></tr>
+                        <tr><td>-130</td><td>6</td><td>0,01</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        <div class="section">
+                <h2 class="section-title">Сценарии развития</h2>
+                <p>Мной были рассмотрены три сценария развития Каттарской впадины.
+                      <br>
+                      В первом сценарии я исходила из проектных характеристик, 
+                     котрые рассматривались в течении XX века, т.е. анализировалось создание водохранилища, заполненного до отметки -60м.
+                      <br>
+                      В сценарии 2 анализировалось заполнение впадины до отметки -90 м.
+                        <br>
+                    Сценарий 3 представляет собой комплексный подход к освоению впадины без создания крупного водного объекта.
+                </p>
+                
+                
+            </div>
+
+
+            
+              <!-- Сценарий 1 -->
+            <div class="section">
+                <h2 class="section-title">Сценарий 1</h2>
+                <p>В первом сценарии я исходила из проектных характеристик, 
+                     котрые рассматривались в течении XX века, т.е. анализировалось создание водохранилища, заполненного до отметки -60м.</p>
+                <p>К плюсам данного подхода можно отнести дешевую энергию, некоторое смягчение климата, создание транспортного узла и развитие рыболовства</p>
+                <p>Однако минусы этого сценария весьма существенны. К ним можно отнести сверхвысокую минерализацию водоема, 
+                    образование гигантских солончаков, возникновение соляных бурь, активизацию карстово-суффозионных процессов  и повышение сейсмичности региона.
+                    Также будет иметь место существенная переработка берегов, явления фильтрации и подъема грунтовых вод, и уничтожение важных для пустыни биоценозо. </p>               
+                
+                
+                <img src="/assets/images/sc1.jpg" alt="Подземные воды Египта" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Развитие территории Каттарской впалины по сценарию 1</div>
+            </div>
+
+
+
+
+
+            <!-- Сценарии развития -->
+            <div class="section">
+                <h2 class="section-title">Сценарии развития</h2>
+                <div class="scenario-grid">
+                    <!-- Сценарий 1 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-1">Сценарий 1<br>По следам XX века</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Уровень воды</span><span class="scenario-stat-value">-60 м</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Площадь</span><span class="scenario-stat-value">12 000 км²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Объём</span><span class="scenario-stat-value">228 км³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Время заполнения</span><span class="scenario-stat-value">18 лет</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Инвестиции</span><span class="scenario-stat-value">2,5–15 млрд $</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Доход</span><span class="scenario-stat-value">3-4 млн $/год</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✓ Дешёвая энергия</span><span class="scenario-stat-value">✓ Рыболовство</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✗ Сверхвысокая минерализация</span><span class="scenario-stat-value">✗ Соляные бури</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сценарий 2 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-2">Сценарий 2<br>Зальём поменьше</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Уровень воды</span><span class="scenario-stat-value">-90 м</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Площадь</span><span class="scenario-stat-value">3 500 км²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Объём</span><span class="scenario-stat-value">15 км³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Время заполнения</span><span class="scenario-stat-value">7 лет</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Инвестиции</span><span class="scenario-stat-value">70–90 млрд $</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Доход</span><span class="scenario-stat-value">15-20 млрд $/год</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✓ Дешёвая электроэнергия</span><span class="scenario-stat-value">✓ Производство соли</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✗ Засоление почв</span><span class="scenario-stat-value">✗ Активизация карста</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сценарий 3 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-3">Сценарий 3<br>Мягкий инжиниринг</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Уровень воды</span><span class="scenario-stat-value">-10 – -60 м</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Площадь</span><span class="scenario-stat-value">140 км²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Объём</span><span class="scenario-stat-value">0,1 км³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Время заполнения</span><span class="scenario-stat-value">4 года</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Инвестиции</span><span class="scenario-stat-value">15–23 млрд $</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Доход</span><span class="scenario-stat-value">2,5 млрд $/год</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✓ Курорт мирового уровня</span><span class="scenario-stat-value">✓ Производство соли</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">✓ Минимальное влияние на ОС</span><span class="scenario-stat-value">✗ Карстовые процессы</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Сравнительный анализ -->
+            <div class="section">
+                <h2 class="section-title">📊 Сравнительный анализ сценариев</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Параметр</th><th>Сценарий 1</th><th>Сценарий 2</th><th>Сценарий 3</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Уровень воды</td><td>-60 м</td><td>-90 м</td><td>-10 – -60 м</td></tr>
+                        <tr><td>Площадь</td><td>12 000 км²</td><td>3 500 км²</td><td>140 км²</td></tr>
+                        <tr><td>Объём</td><td>228 км³</td><td>15 км³</td><td>0,1 км³</td></tr>
+                        <tr><td>Время заполнения</td><td>18 лет</td><td>7 лет</td><td>4 года</td></tr>
+                        <tr><td>Инвестиции</td><td>2,5–15 млрд $</td><td>70–90 млрд $</td><td>15–23 млрд $</td></tr>
+                        <tr><td>Годовой доход</td><td>3-4 млн $</td><td>15-20 млрд $</td><td>2,5 млрд $</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Выводы -->
+            <div class="section">
+                <h2 class="section-title">📌 Выводы</h2>
+                <div class="conclusion">
+                    <p>✓ Египет обладает уникальной территорией, потенциал которой огромен для трансформации экономики</p>
+                    <p>✓ Исследование показывает, что современные технологии позволяют превратить её в рентабельный инвестиционный проект</p>
+                    <p>✓ Наиболее перспективным является комплексное освоение Каттарской впадины как промышленно-рекреационного кластера, объединяющего соледобычу, опреснение воды и туристическую инфраструктуру мирового уровня</p>
+                </div>
+            </div>
+
+            <!-- Необходимые исследования -->
+            <div class="section">
+                <h2 class="section-title">🔬 Рекомендуемые направления дальнейших исследований</h2>
+                <ul class="goals-list">
+                    <li>Геологические исследования</li>
+                    <li>Гидрогеологические исследования</li>
+                    <li>Экологические исследования</li>
+                    <li>Экономические исследования</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Екатерина Рыбина</p>
+    </footer>
+
+    <script src="/js/include.js"></script>
+
+    <script>
+        // ========== ПЕРВЫЙ СЛАЙДЕР ==========
+        const slider1 = document.getElementById('imageSlider');
+        const prevBtn1 = document.getElementById('prevBtn');
+        const nextBtn1 = document.getElementById('nextBtn');
+        const dotsContainer1 = document.getElementById('sliderDots');
+        
+        if (slider1) {
+            let currentIndex1 = 0;
+            const totalSlides1 = document.querySelectorAll('#imageSlider .slide').length;
+            
+            // Создаём точки
+            dotsContainer1.innerHTML = '';
+            for (let i = 0; i < totalSlides1; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex1 = i;
+                    updateSlider1();
+                });
+                dotsContainer1.appendChild(dot);
+            }
+            
+            const dots1 = document.querySelectorAll('#sliderDots .dot');
+            
+            function updateSlider1() {
+                const offset = -currentIndex1 * 100;
+                slider1.style.transform = `translateX(${offset}%)`;
+                
+                dots1.forEach((dot, index) => {
+                    if (index === currentIndex1) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            function nextSlide1() {
+                currentIndex1 = (currentIndex1 + 1) % totalSlides1;
+                updateSlider1();
+            }
+            
+            function prevSlide1() {
+                currentIndex1 = (currentIndex1 - 1 + totalSlides1) % totalSlides1;
+                updateSlider1();
+            }
+            
+            prevBtn1.addEventListener('click', prevSlide1);
+            nextBtn1.addEventListener('click', nextSlide1);
+            
+            // Автопрокрутка
+            let autoPlayInterval1;
+            function startAutoPlay1() {
+                autoPlayInterval1 = setInterval(nextSlide1, 5000);
+            }
+            function stopAutoPlay1() {
+                clearInterval(autoPlayInterval1);
+            }
+            startAutoPlay1();
+            const container1 = slider1.closest('.slider-container');
+            container1.addEventListener('mouseenter', stopAutoPlay1);
+            container1.addEventListener('mouseleave', startAutoPlay1);
+        }
+        
+        // ========== ВТОРОЙ СЛАЙДЕР ==========
+        const slider2 = document.getElementById('imageSlider2');
+        const prevBtn2 = document.getElementById('prevBtn2');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const dotsContainer2 = document.getElementById('sliderDots2');
+        
+        if (slider2) {
+            let currentIndex2 = 0;
+            const totalSlides2 = document.querySelectorAll('#imageSlider2 .slide').length;
+            
+            // Создаём точки
+            dotsContainer2.innerHTML = '';
+            for (let i = 0; i < totalSlides2; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex2 = i;
+                    updateSlider2();
+                });
+                dotsContainer2.appendChild(dot);
+            }
+            
+            const dots2 = document.querySelectorAll('#sliderDots2 .dot');
+            
+            function updateSlider2() {
+                const offset = -currentIndex2 * 100;
+                slider2.style.transform = `translateX(${offset}%)`;
+                
+                dots2.forEach((dot, index) => {
+                    if (index === currentIndex2) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            function nextSlide2() {
+                currentIndex2 = (currentIndex2 + 1) % totalSlides2;
+                updateSlider2();
+            }
+            
+            function prevSlide2() {
+                currentIndex2 = (currentIndex2 - 1 + totalSlides2) % totalSlides2;
+                updateSlider2();
+            }
+            
+            prevBtn2.addEventListener('click', prevSlide2);
+            nextBtn2.addEventListener('click', nextSlide2);
+            
+            // Автопрокрутка
+            let autoPlayInterval2;
+            function startAutoPlay2() {
+                autoPlayInterval2 = setInterval(nextSlide2, 5000);
+            }
+            function stopAutoPlay2() {
+                clearInterval(autoPlayInterval2);
+            }
+            startAutoPlay2();
+            const container2 = slider2.closest('.slider-container');
+            container2.addEventListener('mouseenter', stopAutoPlay2);
+            container2.addEventListener('mouseleave', startAutoPlay2);
+        }
+    </script>
+</body>
+</html>
