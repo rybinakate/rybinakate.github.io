@@ -55,7 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         center: [37.6173, 55.7558],  // Москва, центр
         zoom: 9,
         maxZoom: 18,
-        minZoom: 8
+        minZoom: 8,
+        maxBounds: [
+        [36, 55],   // юго-запад
+        [39.0, 57] 
+        ]   // северо-восток
     });
 
     // Добавляем элементы управления
