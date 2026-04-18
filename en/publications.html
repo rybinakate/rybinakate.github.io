@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications | Ekaterina Rybina</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Additional styles for the publications page */
+        .publications-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .publications-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .publications-list li {
+            margin-bottom: 1.2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            line-height: 1.5;
+        }
+        
+        .publication-link {
+            display: inline-block;
+            margin-top: 0.3rem;
+            font-size: 0.85rem;
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .publication-link:hover {
+            text-decoration: underline;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .publication-authors,
+            .publication-title,
+            .publication-journal {
+                font-size: 0.9rem;
+            }
+            
+            .publication-year {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <div class="publications-container">
+            <div class="section-header">
+                <h1>Publications and Conferences</h1>
+            </div>
+            
+            <ul class="publications-list" id="publications-list">
+                <!-- Publications will be added via JavaScript -->
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Ekaterina Rybina | Made with ❤️ to GIS</p>
+    </footer>
+
+   <script src="/js/include-en.js"></script>
+   <script src="/js/lang-switch.js"></script>
+    <script>
+        // ========== PUBLICATIONS DATA ==========
+        const publications = [
+            { year: 2003, authors: "Khutorskoy M. D., Levshenko V. T., Turkov V. P., Shikunova E.", title: "Geothermal survey on fault structures to determine their modern activity", journal: "Bulletin of the Peoples' Friendship University of Russia. — Moscow" },
+            { year: 2003, authors: "Shikunova E.", title: "Creation of a water body quality certificate using GIS technologies", journal: "Abstracts of the All-Russian Congress of Water Industry Workers. — Moscow. — P. 146-147" },
+            { year: 2004, authors: "Shikunova E.", title: "Use of GIS technologies in the creation of a water body quality certificate", journal: "Proceedings of the Institute of Applied Geophysics (IPG), Issue 84. — Moscow" },
+            { year: 2005, authors: "Shikunova E.", title: "Development of principles and methodology for administrative-water management zoning of territory", journal: "Proceedings of the State Research Center of Applied Ecology (GIPÉ): Problems of Applied Ecology and Heliogeophysics. — P. 53-57" },
+            { year: 2005, authors: "Shikunova E.", title: "Application of GIS technologies in issues of administrative-water management zoning of territory on the example of the Volga basin", journal: "Perm" },
+            { year: 2005, authors: "Shikunova E.", title: "Development of principles and methodology for administrative-water management zoning of territory", journal: "Collection of presentations of the China-Russia Forum of Young Scientists. — Chengdu, China. — P. 206-209" },
+            { year: 2006, authors: "Shikunova E.", title: "Automated technology for water management zoning of territory", journal: "Use and Protection of Natural Resources in Russia. — No. 6. — P. 67-68" },
+            { year: 2006, authors: "Shikunova E.", title: "Technology of hydrographic zoning and delineation of water management areas", journal: "Abstracts of the Second Conference of Young Scientists of National Hydrometeorological Services of CIS Member States. — Moscow. — P. 103-105" },
+            { year: 2006, authors: "Shikunova E.", title: "Automated technology for water management zoning of territory", journal: "EKVATEK-2006: Abstracts of the 7th International Congress 'Water: Ecology and Technology'. — Moscow. — P. 286-287" },
+            { year: 2006, authors: "Shikunova E.U.", title: "Computer-based technology for estimation of condition and management of water resources at a catchment scale", journal: "Geophysical Research Abstracts, Vienna, Vol. 8, General Assembly European Geosciences Union", url: "http://www.cosis.net/abstracts/EGU06/02838/EGU06-J-02838.pdf" },
+            { year: 2006, authors: "Shikunova E.", title: "Administrative-water management zoning at different spatial and temporal scales", journal: "Proceedings of the Institute of Applied Geophysics (IPG), Issue 85. — Moscow. — P. 100-105" },
+            { year: 2007, authors: "Shikunova E.", title: "Methods and technology of automated water management zoning", journal: "Ecology of River Basins: 4th International Scientific and Practical Conference. — Vladimir: Vladimir State University. — P. 435" },
+            { year: 2008, authors: "Shikunova E.", title: "Modern GIS technologies as a tool for refining morphometric characteristics of reservoirs of the Volga-Kama cascade", journal: "Second Scientific Conference of Young Scientists and Talented Students 'Water Resources, Ecology and Hydrological Safety'. — Moscow: Institute of Water Problems of the Russian Academy of Sciences. — P. 58-60" },
+            { year: 2009, authors: "Shikunova E.", title: "Computer-based technology for elaboration of morphometric characteristics of Volga reservoirs", journal: "European Geosciences Union General Assembly. — Vienna, Austria" },
+            { year: 2009, authors: "Shikunova E., Kidyaeva V. M.", title: "Refinement of morphometric characteristics of reservoirs of the Volga-Kama cascade using a set of geoinformation technologies", journal: "Scientific Conference '175 Years of the Hydrometeorological Service of Russia' — Moscow" },
+            { year: 2009, authors: "Shikunova E., Orlova M. S., Kidyaeva V. M.", title: "Integrated use of geoinformation technologies for refining morphometric characteristics of reservoirs", journal: "Conference of Young Scientists Dedicated to the 100th Anniversary of the Birth of Academician E. K. Fedorov — Moscow: IPG" },
+            { year: 2009, authors: "Shikunova E.", title: "Modern GIS technologies as a tool for refining morphometric characteristics of reservoirs of the Volga-Kama cascade", journal: "Conference of Young Scientists 'Water Resources, Ecology and Hydrological Safety' — IWP RAS" },
+            { year: 2011, authors: "Shikunova E., Zemlianov I., Gorelits O., Pavlovsky A.", title: "Computer-based technology for elaboration of morphometric characteristics of reservoirs", journal: "Xivth IWRA World Water Congress — Brazil — PAP005807", url: "https://www.iwra.org/congress/2011/programa_wwc_silusba_site.pdf" },
+            { year: 2011, authors: "Shikunova E.", title: "Analysis of interpolation methods for constructing digital models of water body bottom", journal: "Conference of Young Specialists Dedicated to the 55th Anniversary of the Institute — IPG named after E. K. Fedorov" },
+            { year: 2011, authors: "Zemlyanov I. V., Shikunova E., Gorelits O. V., Pavlovsky A. E.", title: "Use of digital elevation models for refining modern morphometric characteristics of reservoirs", journal: "Conference 'Contemporary Problems of Reservoirs and Their Catchments' — Perm State University" },
+            { year: 2012, authors: "Shikunova E., Andreeva I., Kidyaeva V. M.", title: "Zoning watershed territories of Kaliningrad region depending on human impact on water using GIS", journal: "International Conference 'Intercarto-Intergis 18' — Smolensk; Saint-Dié-des-Vosges" },
+            { year: 2012, authors: "Andreeva I., Shikunova E., Ermakova G., Vishnevskaya I.", title: "Zoning of a catchment area by the degree of anthropogenic pressure using GIS technologies", journal: "Proceedings of the Institute of Applied Geophysics named after Academician E. K. Fedorov. — Moscow. — Issue 91" },
+            { year: 2013, authors: "Zemlyanov I. V., Gorelits O. V., Shikunova E., Pavlovsky A. E.", title: "Modern morphometric characteristics of Vazuza reservoir", journal: "Conference 'Contemporary Problems of Reservoirs and Their Catchments' — Perm State University" },
+            { year: 2013, authors: "Zemlyanov I. V., Gorelits O. V., Shikunova E.", title: "The problem of Moscow region reservoirs water area changes", journal: "Conference 'Contemporary Problems of Reservoirs and Their Catchments' — Perm State University" },
+            { year: 2013, authors: "Andreyeva I., Zemlyanov I. V., Gorelits O. V., Pavlovski A. E., Shikunova E.", title: "Digital elevation models for the purposes of water resources monitoring", journal: "XXXIII Plenum of the Geomorphological Commission of the Russian Academy of Sciences — Saratov" },
+            { year: 2013, authors: "Shikunova E., Zemlianov I. V., Gorelits O. V.", title: "Use of geoinformation technologies in the development of schemes for integrated use and protection of water bodies", journal: "7th International Scientific and Practical Conference 'Ecology of River Basins' — Vladimir" },
+            { year: 2013, authors: "Kidyaeva V., Andreeva I., Shikunova E., Gorelits O.", title: "Features of water management zoning of the Kaliningrad region", journal: "Baltic Region. — Kaliningrad: Immanuel Kant Baltic Federal University Press" },
+            { year: 2013, authors: "Zemlyanov I.V., Shikunova E., Gorelits O.V.", title: "Use of Earth remote sensing data for refining the position of state reference geodetic network points for the purposes of geoinformation mapping", journal: "All-Russian Conference with International Participation 'Application of Space Technologies for the Development of Arctic Regions'" },
+            { year: 2013, authors: "Shikunova E., Zemlyanov I.V, Gorelits O.V., Pavlovsky A.E., Demidenko N.A.", title: "Specialized GIS as a tool for water resources management of reservoirs", journal: "Proceedings of the VII All-Russian Hydrological Congress. St. Petersburg" },
+            { year: 2013, authors: "Andreeva I., Shikunova E., Strokov A. A., Ermakova G. S.", title: "On the issue of preparation of cartographic materials included in the schemes for integrated use and protection of water bodies", journal: "Proceedings of the VII All-Russian Hydrological Congress. St. Petersburg" },
+            { year: 2013, authors: "Zemlyanov I. V., Shikunova E., Strokov A. A., Ermakova G. S.", title: "Methodology for mapping surface water pollution using GIS", journal: "Proceedings of the VII All-Russian Hydrological Congress. St. Petersburg" },
+           
+           { year: 2024, authors: "Demidenko N.A., Gorelits O.V., Sapozhnikova A.A., Rakcheeva E.A., Sanin A.Yu., Ermakova G.S., Borshchenko E.V., Strokov A.A., Tursunova G.Sh., Kulikova Zh.M., Timoshenko A.A., Mishin D.V., Rybina E.Yu., Alabyan A.M., Panchenko E.D., Balakina O.N., Ruzhnikova S.M., Iglin S.M.", title: "Reference and analytical review of the hydrological regime of the Mezen and Kuloy estuary area", journal: "Voronezh: LLC 'Yukon'" },
+           { year: 2026, authors: "Rybina E.", title: "The Qattara Depression: a brilliant project or a crazy idea? Assessment using GIS and remote sensing", journal: "Mapacon Conference — Russia" }
+        ];
+        
+        // Sort publications by year (newest first)
+        publications.sort((a, b) => b.year - a.year);
+        
+        // Render the list
+        const listContainer = document.getElementById('publications-list');
+
+        publications.forEach(pub => {
+            const li = document.createElement('li');
+            
+            let html = `
+                <span class="publication-authors">${pub.authors}</span>
+                <span class="publication-title">«${pub.title}»</span>
+                <span class="publication-journal">${pub.journal}</span>, <span class="publication-year">${pub.year}</span>
+            `;
+            
+            if (pub.url) {
+                html += `<br><a href="${pub.url}" class="publication-link" target="_blank">🔗 Link to publication</a>`;
+            }
+            
+            li.innerHTML = html;
+            listContainer.appendChild(li);
+        });
+    </script>
+</body>
+</html>

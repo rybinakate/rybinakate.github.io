@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qattara Depression | GIS and Remote Sensing Analysis | Ekaterina Rybina</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* ===== ADDITIONAL STYLES FOR THE PROJECT PAGE ===== */
+        .project-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .project-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .project-header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-header .subtitle {
+            font-size: 1rem;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .project-header .author {
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 1rem 0 0.8rem 0;
+            font-weight: 600;
+        }
+        
+        .goals-list {
+            background: #e8f4f8;
+            padding: 1.2rem;
+            border-radius: 12px;
+            list-style: none;
+        }
+        
+        .goals-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .goals-list li::before {
+            content: "●";
+            color: #3498db;
+            position: absolute;
+            left: 0;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .tech-item {
+            background: #f0f0f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #2c3e50;
+        }
+        
+        .data-sources {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .data-card {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .data-card strong {
+            color: #2c3e50;
+        }
+        
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .scenario-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .scenario-header {
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .scenario-header.scenario-1 {
+            background: #8e6ea5;
+            color: white;
+        }
+        
+        .scenario-header.scenario-2 {
+            background: #f77255;
+            color: white;
+        }
+        
+        .scenario-header.scenario-3 {
+            background: #47aaec;
+            color: white;
+        }
+        
+        .scenario-body {
+            padding: 1rem;
+        }
+        
+        .scenario-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .scenario-stat-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .scenario-stat-value {
+            color: #2c3e50;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+        
+        .comparison-table th {
+            background: #2c3e50;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .comparison-table td:first-child {
+            font-weight: 600;
+            background: #f8f9fa;
+            text-align: left;
+        }
+        
+        .conclusion {
+            background: #e8f4f8;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        
+        .conclusion p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .contacts {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .image-placeholder {
+            background: #f0f0f0;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: #999;
+        }
+        
+        .image-caption {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-top: 0.3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .project-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <div class="project-container">
+            <div class="project-header">
+                <h1>Qattara Depression: a brilliant project or a crazy idea?</h1>
+                <div class="subtitle">Assessment using GIS and Remote Sensing</div>
+            </div>
+
+            <!-- Introduction -->
+            <div class="section">
+
+<p>The idea of developing the Qattara Depression is a classic example of a grandiose but still unrealized engineering project. The main concept is to use the elevation difference between the Mediterranean Sea and the Qattara Depression to generate electricity.</p>
+                         <br>
+                                      <br>
+                <p>I was interested in examining this project using modern methods and technologies, using open data sources. The project is not funded by any third-party organizations and is exclusively a scientific development.</p>
+             <br>
+
+                <h2 class="section-title">Geography</h2>
+                <p>The Qattara Depression is located in northwestern Egypt, in the Libyan Desert, approximately 300 km west of Cairo and 76 km south of the Mediterranean coast.</p>
+                 <br>
+                <img src="/assets/images/Geography.jpg" alt="Map of the Qattara Depression" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Fig. 1. Location of the Qattara Depression</div>
+            </div>
+
+            <!-- Literature -->
+            <div class="section">
+
+
+                <h2 class="section-title">Historical Background</h2>
+                  <p>The project was actively developed in the 20th century. Below are the main researchers and their works on the Qattara Depression.</p>
+                   <br>
+                <ul>
+                    <li>John Ball (1933). The Qattara Depression of the Libyan Desert and the Possibility of Its Utilization for Power-Production // The Geographical Journal, Vol. 82, No. 4</li>
+                    <li>Bassler F. (1972). Solar depression power plant of Qattara in Egypt // Solar Energy, Volume 14, Issue 1</li>
+                    <li>De Martino G (1973). The Qattara Depression. Technical report, Hydraulics Institute, Naples, Italy</li>
+                    <li>Kelada M (2010). Global hyper saline power generation Qattara Depression potential. Fourteenth International Middle East Power Systems Conference, Cairo, Egypt</li>
+                    <li>Elsayed Marwa Adel, Ismaeel Walaa S.E. (2019). Environmental assessment for major development projects: A case study “Qattara Depression” // Journal of Cleaner Production, Volume 215</li>
+                    <li>Elite Capital & Co (2023). Agreement with Egyptian Group for International Trade and Consulting to conduct a new feasibility study for the Qattara Depression in Egypt</li>
+                </ul>
+            </div>
+
+            <!-- Goals and Objectives -->
+            <div class="section">
+                <h2 class="section-title">Goals and Objectives of the Study</h2>
+                <ul>
+                    <li>To analyze various scenarios for the development of the Qattara Depression in Egypt</li>
+                    <li>To assess the potential and possible risks of the project</li>
+                </ul>
+            </div>
+
+            <!-- Software -->
+            <div class="section">
+                <h2 class="section-title">Software</h2>
+                <p>In this project, I used exclusively open source & free for non-commercial use software products:</p>
+
+                <div class="tech-stack">
+                    <span class="tech-item">QGIS</span>
+                    <span class="tech-item">PostgreSQL/PostGIS</span>
+                    <span class="tech-item">Google Earth Engine</span>
+                </div>
+            </div>
+
+            <!-- DEM -->
+            <div class="section">
+                <h2 class="section-title">Relief</h2>
+                <p>Based on the Copernicus digital elevation model (30 m/px), a relief map of Egypt was constructed, highlighting the unique elevation position of the Qattara Depression.</p>
+                 <br>
+                <img src="/assets/images/dem.jpg" alt="Relief map of Egypt" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Fig. 2. The depression is located below -50 m relative to the Mediterranean Sea</div>
+            </div>
+
+            <!-- Geology -->
+            <div class="section">
+                <h2 class="section-title">Geology</h2>
+                <p>Using data from the Global Lithological Map Database, WHYMAP, U.S. Geological Survey's World Energy Project (WEP), and NOAA National Centers for Environmental Information, I created a geological map of Egypt. It can be noted that the Qattara Depression is largely composed of evaporites and is located in a zone of karst processes. Both of these factors are highly significant and are limiting factors in the development of the depression's exploitation project.</p>
+                 <br>
+                <img src="/assets/images/Geology.jpg" alt="Geological map of Egypt" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Fig. 3. Geological map of Egypt</div>
+            </div>
+
+            <!-- Groundwater -->
+            <div class="section">
+                <h2 class="section-title">Groundwater</h2>
+                <p>Using WHYMAP data, I created a map reflecting the state of groundwater in Egypt. The Qattara Depression is partially located in a zone of saline groundwater and has small reserves of near-surface groundwater. It is worth noting separately that at depths exceeding 250 m, the groundwater reserves in this part of Africa are colossal.</p>
+                 <br>
+                <img src="/assets/images/Groundwater.jpg" alt="Groundwater of Egypt" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Fig. 4. Groundwater of Egypt</div>
+            </div>
+
+            <!-- Climate -->
+            <div class="section">
+                <h2 class="section-title">Climate</h2>
+                <p>Using WorldClim data, I compiled a selection of climate maps of Egypt, which clearly show that the depression has an extremely arid climate. Precipitation varies from 25 mm in the north, while the southern part receives no more than 10 mm. In summer, the average daytime air temperature is 36.2 °C, while in winter it drops to 6.2 °C. Prevailing winds blow from the north, with peak speeds (11.5 m/s) recorded in March and the lowest (3.2 m/s) in December.</p>
+                 <br>
+                <!-- Image Slider 1 -->
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider" id="imageSlider">
+                            <div class="slide">
+                                <img src="/assets/images/temp_max.jpg" alt="Maximum temperature">
+                                <div class="slide-caption">Maximum temperature (July)</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/temp_min.jpg" alt="Minimum temperature">
+                                <div class="slide-caption">Minimum temperature (January)</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/precipitation.jpg" alt="Precipitation">
+                                <div class="slide-caption">Precipitation</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/Watervaporpressure.jpg" alt="Water vapor pressure">
+                                <div class="slide-caption">Water vapor pressure</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/sun_radiation.jpg" alt="Solar radiation">
+                                <div class="slide-caption">Solar radiation</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/wind_speed.jpg" alt="Wind speed">
+                                <div class="slide-caption">Wind speed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation buttons for the first slider -->
+                    <button class="slider-btn prev-btn" id="prevBtn">❮</button>
+                    <button class="slider-btn next-btn" id="nextBtn">❯</button>
+                    
+                    <!-- Indicators for the first slider -->
+                    <div class="slider-dots" id="sliderDots"></div>
+                </div>
+            </div>
+
+            <!-- NDVI -->
+            <div class="section">
+                <h2 class="section-title">NDVI</h2>
+                <p>Google Earth Engine was used to calculate NDVI. I analyzed January Landsat mosaics for the period 1986-2025. January was chosen as the wettest month, and the mosaic was compiled to ensure cloud-free coverage of the territory. Analysis of the index distribution showed that vegetation is absent in the northern part of the Qattara Depression, while it appears periodically in the southern part.</p>
+                 <br>
+                <!-- Image Slider 2 -->
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider" id="imageSlider2">
+                            <div class="slide">
+                                <img src="/assets/images/ndvi1986.jpg" alt="NDVI, 1986">
+                                <div class="slide-caption">NDVI, January 1986</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi1990.jpg" alt="NDVI, 1990">
+                                <div class="slide-caption">NDVI, January 1990</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2000.jpg" alt="NDVI, 2000">
+                                <div class="slide-caption">NDVI, January 2000</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2005.jpg" alt="NDVI, 2005">
+                                <div class="slide-caption">NDVI, January 2005</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2010.jpg" alt="NDVI, 2010">
+                                <div class="slide-caption">NDVI, January 2010</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2015.jpg" alt="NDVI, 2015">
+                                <div class="slide-caption">NDVI, January 2015</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2020.jpg" alt="NDVI, 2020">
+                                <div class="slide-caption">NDVI, January 2020</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2022.jpg" alt="NDVI, 2022">
+                                <div class="slide-caption">NDVI, January 2022</div>
+                            </div>
+                            <div class="slide">
+                                <img src="/assets/images/ndvi2025.jpg" alt="NDVI, 2025">
+                                <div class="slide-caption">NDVI, January 2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation buttons for the second slider -->
+                    <button class="slider-btn prev-btn" id="prevBtn2">❮</button>
+                    <button class="slider-btn next-btn" id="nextBtn2">❯</button>
+                    
+                    <!-- Indicators for the second slider -->
+                    <div class="slider-dots" id="sliderDots2"></div>
+                </div>
+            </div>
+
+
+
+            <!-- Morphometric characteristics -->
+            <div class="section">
+                <h2 class="section-title">Morphometric characteristics of the Qattara Depression</h2>
+                <p>Based on the DEM data, I calculated the design characteristics of the area and volume of a possible reservoir. Filling levels from -50 m to -130 m were considered.</p>
+
+                <div class="section-subtitle">Areas and volumes</div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Level, m</th><th>Area, km²</th><th>Volume, km³</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>-50</th><td>14,178</td><td>362</td></tr>
+                        <tr><td>-60</th><td>12,617</td><td>228</td></tr>
+                        <tr><td>-70</th><td>9,788</td><td>113</td></tr>
+                        <tr><td>-80</th><td>4,661</td><td>38</td></tr>
+                        <tr><td>-90</th><td>1,265</td><td>15</td></tr>
+                        <tr><td>-100</th><td>510</td><td>6</td></tr>
+                        <tr><td>-110</th><td>241</td><td>3.0</td></tr>
+                        <tr><td>-120</th><td>160</td><td>1.0</td></tr>
+                        <tr><td>-130</th><td>6</td><td>0.01</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        <div class="section">
+                <h2 class="section-title">Development Scenarios</h2>
+                <p>I examined three scenarios for the development of the Qattara Depression.
+                      <br>
+                      In the first scenario, I based my analysis on the design characteristics considered during the 20th century, i.e., the creation of a reservoir filled to the -60 m level.
+                      <br>
+                      Scenario 2 analyzed filling the depression to the -90 m level.
+                        <br>
+                    Scenario 3 represents an integrated approach to developing the depression without creating a large water body.
+                </p>
+                
+                
+            </div>
+
+
+            
+              <!-- Scenario 1 -->
+            <div class="section">
+                <h2 class="section-title">Scenario 1</h2>
+                <p>In the first scenario, I based my analysis on the design characteristics considered during the 20th century, i.e., the creation of a reservoir filled to the -60 m level. The pipeline length in this scenario is about 80 km, and a hydroelectric power plant is built at the boundary of the reservoir. The figure shows possible pipeline routes and the potential location of hydroelectric power plants.</p>
+                <p>The advantages of this approach include cheap energy, some climate mitigation, the creation of a transport hub, and the development of fisheries.</p>
+                <p>However, the disadvantages of this scenario are quite significant. They include ultra-high salinity of the reservoir, the formation of giant salt marshes, the occurrence of salt storms, activation of karst-suffosion processes and increased seismicity in the region. There will also be significant shoreline erosion, filtration and groundwater rise phenomena, and the destruction of important desert biocenoses.</p>               
+                
+                 <br>
+                <img src="/assets/images/scenario_a.jpg" alt="Groundwater of Egypt" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Development of the Qattara Depression territory according to Scenario 1</div>
+            </div>
+
+        <!-- Scenario 2 -->
+            <div class="section">
+                <h2 class="section-title">Scenario 2</h2>
+                <p>The second scenario considered the possibility of creating a reservoir up to the -90 m level relative to the Mediterranean Sea. The land area used is reduced from 12,000 km² to 3,500 km². The load on the earth's crust is reduced, as the water volume decreases from 228 km³ to 15 km³, and the project implementation time is reduced from 15 to 7 years. The advantages of this approach include cheap electricity generation, the creation of an aquatic ecosystem, salt production, fisheries, and the creation of a small recreation zone. However, there will be soil salinization, salt transfer, activation of karst-suffosion processes, shoreline erosion processes, groundwater rise, and destruction of biocenoses. The cost of the project increases significantly due to the lengthening of the pipeline from 85 to 200-250 km. However, it becomes possible to install two hydroelectric power plants at the -60 and -90 m drops. The figure shows possible pipeline routes and the potential location of hydroelectric power plants.</p>               
+                
+                 <br>
+                <img src="/assets/images/scenario_b.jpg" alt="Scenario 2" style="width: 100%; border-radius: 12px;">
+                <div class="image-caption">Development of the Qattara Depression territory according to Scenario 2</div>
+            </div>
+
+            <!-- Scenario 3 -->
+                        <div class="section">
+                            <h2 class="section-title">Scenario 3</h2>
+                            <p>Scenario 3 considers not flooding, but high-tech industrial and recreational development of the Qattara Depression on an area of less than 1% of the depression (140 km²). Water from the Mediterranean Sea is pumped to the coastal ridge (+200 m) using pumps powered by solar energy. Part of the water goes to desalination and further water supply for the resort area. The main flow is directed to a cascade of evaporation ponds (140 km²) for the production of salt and valuable components (magnesium, bromine, potassium), also partially providing the resort complex with salt water. Construction works taking into account geological risks, including the use of geomembranes, anti-corrosion materials, and continuous karst monitoring, allow minimizing possible project risks. The advantages of this scenario include increasing Egypt's water security, creating a large number of jobs, the emergence of a major export sector of the economy, and the creation of a world-class resort.</p>
+
+<p>The project is technically feasible, economically profitable (salt pays for the base in 3 years) and has strategic importance for Egypt. Instead of flooding the depression - smart industrial development working for the benefit of the country.</p>               
+                             <br>
+                            
+                            <img src="/assets/images/scenario_c.jpg" alt="Scenario 3" style="width: 100%; border-radius: 12px;">
+                            <div class="image-caption">Development of the Qattara Depression territory according to Scenario 3</div>
+ <br>
+                            <img src="/assets/images/scenario_c_big.jpg" alt="Scenario 3" style="width: 100%; border-radius: 12px;">
+                            <div class="image-caption">Detailed diagram of the industrial and resort complex</div>
+                        </div>
+
+
+            <!-- Development Scenarios -->
+            <div class="section">
+                <h2 class="section-title">Development Scenarios</h2>
+
+            <p>The cards below show the final data for each of the considered scenarios for the development of the Qattara Depression.</p>
+            <br>
+                <div class="scenario-grid">
+                    <!-- Scenario 1 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-1">Scenario 1<br>Following the 20th Century</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Water level</span><span class="scenario-stat-value">-60 m</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Area</span><span class="scenario-stat-value">12,000 km²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Volume</span><span class="scenario-stat-value">228 km³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Filling time</span><span class="scenario-stat-value">18 years</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Investment</span><span class="scenario-stat-value">$2.5–15 billion</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Revenue</span><span class="scenario-stat-value">$3-4 million/year</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-value">✅ Cheap energy</span><span class="scenario-stat-value">✅ Fisheries</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-value">❌ Ultra-high salinity</span><span class="scenario-stat-value">❌ Salt storms</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Scenario 2 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-2">Scenario 2<br>Flood Less</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Water level</span><span class="scenario-stat-value">-90 m</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Area</span><span class="scenario-stat-value">3,500 km²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Volume</span><span class="scenario-stat-value">15 km³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Filling time</span><span class="scenario-stat-value">7 years</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Investment</span><span class="scenario-stat-value">$70–90 billion</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Revenue</span><span class="scenario-stat-value">$15-20 billion/year</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-value">✅ Cheap electricity</span><span class="scenario-stat-value">✅ Salt production</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-value">❌ Soil salinization</span><span class="scenario-stat-value">❌ Karst activation</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Scenario 3 -->
+                    <div class="scenario-card">
+                        <div class="scenario-header scenario-3">Scenario 3<br>Soft Engineering</div>
+                        <div class="scenario-body">
+                            <div class="scenario-stat"><span class="scenario-stat-label">Water level</span><span class="scenario-stat-value">-10 – -60 m</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Area</span><span class="scenario-stat-value">140 km²</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Volume</span><span class="scenario-stat-value">0.1 km³</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Filling time</span><span class="scenario-stat-value">4 years</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Investment</span><span class="scenario-stat-value">$15–23 billion</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-label">Revenue</span><span class="scenario-stat-value">$2.5 billion/year</span></div>
+                            <hr>
+                            <div class="scenario-stat"><span class="scenario-stat-value">✅ World-class resort</span><span class="scenario-stat-value">✅ Salt production</span></div>
+                            <div class="scenario-stat"><span class="scenario-stat-value">✅ Minimal environmental impact</span><span class="scenario-stat-value">❌ Karst processes</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparative Analysis -->
+            <div class="section">
+                <h2 class="section-title">Comparative Analysis of Scenarios</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Parameter</th><th>Scenario 1</th><th>Scenario 2</th><th>Scenario 3</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Water level</th><td>-60 m</td><td>-90 m</td><td>-10 – -60 m</td></tr>
+                        <tr><td>Area</th><td>12,000 km²</td><td>3,500 km²</td><td>140 km²</td></tr>
+                        <tr><td>Volume</th><td>228 km³</td><td>15 km³</td><td>0.1 km³</td></tr>
+                        <tr><td>Filling time</th><td>18 years</td><td>7 years</td><td>4 years</td></tr>
+                        <tr><td>Investment</th><td>$2.5–15 billion</td><td>$70–90 billion</td><td>$15–23 billion</td></tr>
+                        <tr><td>Annual revenue</th><td>$3-4 million</td><td>$15-20 billion</td><td>$2.5 billion</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Conclusions -->
+            <div class="section">
+                <h2 class="section-title">Conclusions</h2>
+                <div class="conclusion">
+                    <p>✓ Egypt possesses a unique territory with enormous potential for economic transformation</p>
+                    <p>✓ The research shows that modern technologies can turn it into a profitable investment project</p>
+                    <p>✓ The most promising approach is the integrated development of the Qattara Depression as an industrial and recreational cluster, combining salt production, water desalination, and world-class tourism infrastructure</p>
+                </div>
+            </div>
+
+            <!-- Further Research -->
+            <div class="section">
+                <h2 class="section-title">What's Next?</h2>
+
+                     <p>Further development of the project requires additional geological, hydrogeological, environmental, and economic studies of the territory.</p>
+    
+
+                </p>
+                <ul>
+            </div>
+        </div>
+    </main>
+
+   <footer>
+        <p>© 2025 Ekaterina Rybina | Made with ❤️ to GIS</p>
+    </footer>
+
+<script src="/js/include-en.js"></script>
+<script src="/js/lang-switch.js"></script>
+
+    <script>
+        // ========== FIRST SLIDER ==========
+        const slider1 = document.getElementById('imageSlider');
+        const prevBtn1 = document.getElementById('prevBtn');
+        const nextBtn1 = document.getElementById('nextBtn');
+        const dotsContainer1 = document.getElementById('sliderDots');
+        
+        if (slider1) {
+            let currentIndex1 = 0;
+            const totalSlides1 = document.querySelectorAll('#imageSlider .slide').length;
+            
+            // Create dots
+            dotsContainer1.innerHTML = '';
+            for (let i = 0; i < totalSlides1; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex1 = i;
+                    updateSlider1();
+                });
+                dotsContainer1.appendChild(dot);
+            }
+            
+            const dots1 = document.querySelectorAll('#sliderDots .dot');
+            
+            function updateSlider1() {
+                const offset = -currentIndex1 * 100;
+                slider1.style.transform = `translateX(${offset}%)`;
+                
+                dots1.forEach((dot, index) => {
+                    if (index === currentIndex1) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            function nextSlide1() {
+                currentIndex1 = (currentIndex1 + 1) % totalSlides1;
+                updateSlider1();
+            }
+            
+            function prevSlide1() {
+                currentIndex1 = (currentIndex1 - 1 + totalSlides1) % totalSlides1;
+                updateSlider1();
+            }
+            
+            prevBtn1.addEventListener('click', prevSlide1);
+            nextBtn1.addEventListener('click', nextSlide1);
+            
+            // Auto-play
+            let autoPlayInterval1;
+            function startAutoPlay1() {
+                autoPlayInterval1 = setInterval(nextSlide1, 5000);
+            }
+            function stopAutoPlay1() {
+                clearInterval(autoPlayInterval1);
+            }
+            startAutoPlay1();
+            const container1 = slider1.closest('.slider-container');
+            container1.addEventListener('mouseenter', stopAutoPlay1);
+            container1.addEventListener('mouseleave', startAutoPlay1);
+        }
+        
+        // ========== SECOND SLIDER ==========
+        const slider2 = document.getElementById('imageSlider2');
+        const prevBtn2 = document.getElementById('prevBtn2');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const dotsContainer2 = document.getElementById('sliderDots2');
+        
+        if (slider2) {
+            let currentIndex2 = 0;
+            const totalSlides2 = document.querySelectorAll('#imageSlider2 .slide').length;
+            
+            // Create dots
+            dotsContainer2.innerHTML = '';
+            for (let i = 0; i < totalSlides2; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    currentIndex2 = i;
+                    updateSlider2();
+                });
+                dotsContainer2.appendChild(dot);
+            }
+            
+            const dots2 = document.querySelectorAll('#sliderDots2 .dot');
+            
+            function updateSlider2() {
+                const offset = -currentIndex2 * 100;
+                slider2.style.transform = `translateX(${offset}%)`;
+                
+                dots2.forEach((dot, index) => {
+                    if (index === currentIndex2) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            function nextSlide2() {
+                currentIndex2 = (currentIndex2 + 1) % totalSlides2;
+                updateSlider2();
+            }
+            
+            function prevSlide2() {
+                currentIndex2 = (currentIndex2 - 1 + totalSlides2) % totalSlides2;
+                updateSlider2();
+            }
+            
+            prevBtn2.addEventListener('click', prevSlide2);
+            nextBtn2.addEventListener('click', nextSlide2);
+            
+            // Auto-play
+            let autoPlayInterval2;
+            function startAutoPlay2() {
+                autoPlayInterval2 = setInterval(nextSlide2, 5000);
+            }
+            function stopAutoPlay2() {
+                clearInterval(autoPlayInterval2);
+            }
+            startAutoPlay2();
+            const container2 = slider2.closest('.slider-container');
+            container2.addEventListener('mouseenter', stopAutoPlay2);
+            container2.addEventListener('mouseleave', startAutoPlay2);
+        }
+    </script>
+</body>
+</html>

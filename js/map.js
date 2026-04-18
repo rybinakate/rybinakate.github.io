@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================================================
     
     // 1. Загружаем данные POPPERPOI (количество потенциальных клиентов)
-    fetch('../data/popperpoi.geojson')
+    fetch('/data/popperpoi.geojson')
         .then(response => response.json())
         .then(data => {
             popperpoiData = data;
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // 2. Загружаем данные POI (точки питания)
-    fetch('../data/poi.geojson')
+    fetch('/data/poi.geojson')
         .then(response => response.json())
         .then(data => {
             poiData = data;
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // 3. Загружаем данные о населении (гексагоны)
-    fetch('../data/population.geojson')
+    fetch('/data/population.geojson')
         .then(response => response.json())
         .then(data => {
             populationData = data;

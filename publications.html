@@ -41,20 +41,6 @@
             margin-bottom: 2rem;
         }
         
-        .stats-pubs {
-            background: #e8f4f8;
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .stats-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #3498db;
-        }
-        
         @media (max-width: 768px) {
             .publication-authors,
             .publication-title,
@@ -74,7 +60,7 @@
     <main>
         <div class="publications-container">
             <div class="section-header">
-                <h1>Публикации и конференции</h1>
+                <h1 data-i18n="publications_title">Публикации и конференции</h1>
             </div>
             
             <ul class="publications-list" id="publications-list">
@@ -84,10 +70,11 @@
     </main>
 
     <footer>
-        <p>© 2025 Екатерина Рыбина | Сделано с ❤️ для портфолио</p>
+        <p>© 2025 Екатерина Рыбина | Сделано с ❤️ к ГИС</p>
     </footer>
 
     <script src="/js/include.js"></script>
+   <script src="/js/lang-switch.js"></script>
     <script>
         // ========== ДАННЫЕ ПУБЛИКАЦИЙ ==========
         const publications = [
@@ -130,28 +117,25 @@
         // Сортируем публикации по году (от новых к старым)
         publications.sort((a, b) => b.year - a.year);
         
-        
-       // Рендерим список
-const listContainer = document.getElementById('publications-list');
+        // Рендерим список
+        const listContainer = document.getElementById('publications-list');
 
-publications.forEach(pub => {
-    const li = document.createElement('li');
-    
-    let html = `
-        <span class="publication-authors">${pub.authors}</span>
-        <span class="publication-title">«${pub.title}»</span>
-        <span class="publication-journal">${pub.journal}</span>, <span class="publication-year">${pub.year}</span>
-    `;
-    
-    if (pub.url) {
-        html += `<br><a href="${pub.url}" class="publication-link" target="_blank">🔗 Ссылка на публикацию</a>`;
-    }
-    
-    li.innerHTML = html;
-    listContainer.appendChild(li);
-});
-
-
+        publications.forEach(pub => {
+            const li = document.createElement('li');
+            
+            let html = `
+                <span class="publication-authors">${pub.authors}</span>
+                <span class="publication-title">«${pub.title}»</span>
+                <span class="publication-journal">${pub.journal}</span>, <span class="publication-year">${pub.year}</span>
+            `;
+            
+            if (pub.url) {
+                html += `<br><a href="${pub.url}" class="publication-link" target="_blank">🔗 Ссылка на публикацию</a>`;
+            }
+            
+            li.innerHTML = html;
+            listContainer.appendChild(li);
+        });
     </script>
 </body>
 </html>
