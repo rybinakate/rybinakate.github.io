@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commercial Potential Assessment for F&B Projects</title>
+   <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" />
+  
+    <style>
+        /* Specific styles for the map page */
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            /* Ensure the container does not collapse */
+            min-height: 500px;
+        }
+
+
+        .info-panel {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<header></header>
+
+    <main>
+        <h1>Commercial Potential Assessment for F&B Projects</h1>
+       <p class="description-text">Geoanalytics for determining the development potential of a food service outlet network</p>
+
+        <!-- Side statistics panel -->
+<!-- Side statistics panel -->
+<div class="stats-panel">
+    <div class="stats-panel-title">
+        <span></span> Location Analytics
+    </div>
+    <div class="stats-panel-content">
+        <div class="stat-card-panel" id="stat-hexagon">
+            <div class="stat-label-panel">Selected District</div>
+            <div class="stat-value-panel"><span id="selected-population">—</span> <span class="stat-unit-panel">people</span></div>
+        </div>
+        
+        <div class="stat-card-panel" id="stat-isochrone">
+            <div class="stat-label-panel">Within 5 min walk</div>
+            <div class="stat-value-panel"><span id="isochrone-population">—</span> <span class="stat-unit-panel">people</span></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="analytics-controls">
+    <button id="toggle-population" class="analytics-btn">Hide population</button>
+    <button id="toggle-popperpoi" class="analytics-btn">Hide saturation index</button>
+    <button id="reset-analytics" class="analytics-btn">Reset isochrone</button>
+    
+</div>
+
+
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+<!-- Legend -->
+<div class="legend">
+    <div class="legend-title">Legend</div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Population (people/hexagon)</div>
+        <div class="legend-gradient">
+            <div class="gradient-bar population-gradient"></div>
+            <div class="gradient-labels">
+                <span>0</span>
+                <span>5k</span>
+                <span>15k</span>
+                <span>30k</span>
+                <span>50k+</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">F&amp;B Market Saturation Index</div>
+        <div class="legend-gradient">
+            <div class="gradient-bar popperpoi-gradient"></div>
+            <div class="gradient-labels">
+                <span>0</span>
+                <span>300</span>
+                <span>750</span>
+                <span>1.5k</span>
+                <span>2.5k</span>
+                <span>16k+</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+        <div class="legend-subtitle">Food outlet types</div>
+        <div class="legend-items">
+            <div class="legend-item"><span class="legend-color" style="background: #FF6B35;"></span><span>Cafe</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #F7C35C;"></span><span>Bakeries</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #9B5DE5;"></span><span>Bars / Pubs</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #F15BB5;"></span><span>Restaurants</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #00BBF9;"></span><span>Fast food</span></div>
+            <div class="legend-item"><span class="legend-color" style="background: #00F5D4;"></span><span>Food courts</span></div>
+        </div>
+    </div>
+    
+    <div class="legend-section">
+      
+        <div class="legend-item"><span class="legend-line"></span><span>Isochrone (5 min walk)</span></div>
+    
+    </div>
+</div>
+
+
+<div class="project-description">
+    <h3>About the Map</h3>
+    <p>The map presents spatial data that allows assessing population distribution, existing food service infrastructure, and calculating an analytical indicator — the F&amp;B market saturation index. The map is intended for preliminary location analysis when planning the opening of new food outlets, as well as for studying the competitive environment in various urban districts.</p>
+    
+    <br>
+    <h4>Population Data</h4>
+    <p>Population information is presented in the form of hexagonal cells (H3). This format is convenient for spatial analysis because all cells have the same area and do not distort the real distribution of people, unlike administrative boundaries. The data is obtained from the open source Kontur Population, which aggregates information from various satellite and statistical data. The hexagon color varies from light pink to dark burgundy depending on the number of inhabitants: the darker the color, the more people live in that cell.</p>
+    
+    <br>
+    <h4>Food Outlets</h4>
+    <p>Existing food service establishments from the open cartographic source OpenStreetMap are plotted on the map. The selection includes the following categories:</p>
+    <ul>
+        <li>restaurants</li>
+        <li>cafes</li>
+        <li>bakeries</li>
+        <li>bars and pubs</li>
+        <li>fast food establishments</li>
+        <li>food courts</li>
+    </ul>
+    <p>Each point has its own color depending on the type of establishment. This allows you to visually assess which formats predominate in a particular district and identify possible niches not occupied by competitors.</p>
+
+    <br>
+    <h4>F&amp;B Market Saturation Index</h4>
+    <p>For each hexagon, the F&amp;B market saturation index is calculated. This indicator is calculated as the ratio of the number of residents to the number of food outlets within a single hexagon.</p>
+    <p><strong>Formula:</strong> <code>Saturation Index = Hexagon Population / Number of Food Outlets in Hexagon</code></p>
+   
+    <br>
+    <p><strong>Interpretation of the Index:</strong></p>
+    <ul>
+        <li>Low values (less than 500 residents per food outlet) — high concentration of establishments, market oversaturation, high competition.</li>
+        <li>Medium values (500–1500 residents per food outlet) — moderate competition, balanced market.</li>
+        <li>High values (more than 1500 residents per food outlet) — lack of supply, presence of a free niche for opening a new business.</li>
+    </ul>
+    <p>The color scheme of the index is built on a gradient from red (high competition) to green (free niche).</p>
+
+    <br>
+    <h4>Interactive Features</h4>
+    <p>The map supports interaction to obtain detailed information about the selected location.</p>
+    <ul>
+       
+        <li>Click on the map — automatically builds a 5-minute isochrone (pedestrian accessibility zone). The isochrone shows the territory that a person can walk in 5 minutes from the selected point (at an average pedestrian speed of 80 meters per minute, the radius is 400 meters). Inside this zone, the number of existing food outlets (competitors) is counted. The result is displayed in a pop-up window.</li>
+    </ul>
+  
+<br>
+    <h4>Statistics Panel</h4>
+    <p>A panel is located at the top of the screen, which displays in real time:</p>
+    <ul>
+       
+        <li>population of the selected hexagon</li>
+        <li>population within the isochrone zone</li>
+    </ul>
+
+    <br>
+    <h4>Layer Switching</h4>
+    <p>Using the control buttons, you can enable and disable the display of layers:</p>
+    <ul>
+        <li>Population layer — displays hexagons with color indication of population density.</li>
+        <li>Market saturation index layer — shows the estimated number of potential customers for food outlets (an aggregated indicator based on population density and other factors).</li>
+        <li>Reset isochrone — The button allows you to delete the isochrone created by the user.</li>
+    </ul>
+    
+    
+    <br>
+    <h4>Technologies and Data Sources</h4>
+    <ul>
+        <li>Mapping library: MapLibre GL JS</li>
+        <li>Spatial analysis: Turf.js (calculation of isochrones, intersections, buffer zones)</li>
+        <li>Population data: Kontur Population (hexagons)</li>
+        <li>Food outlet data: OpenStreetMap (OSM)</li>
+        <li>Map style: OpenFreeMap / Positron</li>
+    </ul>
+
+      <br>
+     <p>I implemented this project on the frontend; the data was loaded as geojson files directly into the project. This approach is due to the technical limitations of GitPages. If necessary and if technical capabilities are available, it is possible to implement the project with a PostgreSQL database deployment and/or connection of a vector tile service.</p>
+      <br>
+    <p><a href="https://github.com/rybinakate/rybinakate.github.io" target="_blank" rel="noopener noreferrer">🔗 Source code on GitHub</a></p>
+</div>
+
+       
+    </main>
+
+    <footer>
+        <p>© 2025 Ekaterina Rybina | Made with ❤️ to GIS</p>
+    </footer>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+    <script src="/js/map.js"></script>
+    <script src="/js/include-en.js"></script>
+<script src="/js/lang-switch.js"></script>
+</body>
+
+</html>

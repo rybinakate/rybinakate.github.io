@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "figma-local": {
+      "command": "npx",
+      "args": ["-y", "figma-local-mcp", "--stdio"],
+      "env": {
+        "FIGMA_LOCAL_PATH": "/Volumes/Backup/SOI/Portfoilo/Site_itog/designs"
+      }
+    }
+  }
+}
